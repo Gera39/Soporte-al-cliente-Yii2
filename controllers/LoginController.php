@@ -10,15 +10,17 @@ use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
 use yii\db\Command;
-
+use app\models\RegisterForm;
 class LoginController extends Controller{
 
     public function actionIndex(){
         
         $model = new LoginForm();
+        $modelCreate = new RegisterForm();
         $this->layout = 'login/login';
         return $this->render('index',[
             'model' => $model,
+            'modelCreate' => $modelCreate,
         ]);
     }   
 
@@ -35,17 +37,15 @@ class LoginController extends Controller{
             // if ($user) {
             //     Yii::$app->user->login($user);
             // }
-            $this->layout = 'login/login';
             return $this->redirect(['login/entrar' , 'id' => $id]);
         }else{
-            return $this->redirect(['site/index', 'mensaje' =>'error']);
+            return $this->redirect(['index', 'mensaje' =>'error']);
          
         }
     }
 
     public function actionEntrar(){
-        $this->layout = 'login/login';
-        return $this->render('entrar');
+        return $this->redirect(['panel/dashboard-admin']);
     }
 }
 ?>

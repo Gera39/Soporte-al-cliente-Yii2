@@ -3,13 +3,16 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
-$this->title = 'Login';
-$this->params['breadcrumbs'][] = $this->title;
 
+$mensaje = "none";
+if(isset($_GET["mensaje"])){
+    $mensaje = "block";
+}
 /* @var $model \app\models\LoginForm */
+
 ?>
     
-    <div id="error-message" class="bg-danger text-white p-3" style="border-radius:33px; display: block; ">Holaaa</div>
+    <div id="error-message" class="bg-danger text-white p-3 m-2" style="border-radius:33px; display: <?=$mensaje?>; ">Error de Contraseña o Usuario</div>
 
     <div class="container" id="container">
         <div class="form-container sign-up">
@@ -17,7 +20,7 @@ $this->params['breadcrumbs'][] = $this->title;
         ?>
 
         <?php $form = ActiveForm::begin([
-            'id' => 'login-form',
+            'id' => 'register-form',
             'action' => ['login/login-custom'],
             'method' => 'post',
         ]); ?>
@@ -27,16 +30,13 @@ $this->params['breadcrumbs'][] = $this->title;
             <?= Html::a('<i class="fa-brands fa-google"></i>', '#', ['class' => 'icon']) ?>
         </div>
         <span>o crea el registro</span>
-        <?= $form->field($model, 'nombre')->textInput(['placeholder' => 'Nombre', 'required' => true])->label(false) ?>
-        <?= $form->field($model, 'apellido')->textInput(['placeholder' => 'Apellido', 'required' => true])->label(false) ?>
-        <?= $form->field($model, 'correo')->input('email', ['placeholder' => 'Correo', 'required' => true])->label(false) ?>
-        <?= $form->field($model, 'telefono')->input('tel', ['placeholder' => 'Telefono', 'required' => true])->label(false) ?>
-        <?= $form->field($model, 'password')->passwordInput(['placeholder' => 'Password', 'required' => true])->label(false) ?>
-        <?= $form->field($model, 'password_repeat')->passwordInput(['placeholder' => 'Confirmar Password', 'required' => true])->label(false) ?>
-        <?= $form->field($model, 'rol')->hiddenInput(['value' => 'c'])->label(false) ?>
+        <?= $form->field($modelCreate, 'nombre')->textInput(['placeholder' => 'Nombre', 'required' => true])->label(false) ?>
+        <?= $form->field($modelCreate, 'apellido')->textInput(['placeholder' => 'Apellido', 'required' => true])->label(false) ?>
+        <?= $form->field($modelCreate, 'email')->textInput(['placeholder' => 'Correo o Usuario', 'required' => true])->label(false) ?>
+        <?= $form->field($modelCreate, 'password')->passwordInput(['placeholder' => 'Contraseña', 'required' => true])->label(false) ?>
+        <?= $form->field($modelCreate, 'telefono')->textInput(['type' => 'tel', 'placeholder' => 'Teléfono', 'required' => true])->label(false) ?>
 
-     
-         <div id="error-message" style="color: red; display: none;">Las contraseñas no coinciden, vuelva intentarlo</div>
+        <div id="error-message" style="color: red; display: none;">Las contraseñas no coinciden, vuelva intentarlo</div>
 
         <?= Html::submitButton('Crear Cuenta', ['class' => 'btn btn-primary']) ?>
 
@@ -68,7 +68,7 @@ $this->params['breadcrumbs'][] = $this->title;
             <div class="toggle">
                 <div class="toggle-panel toggle-left">
                     <h1>Bienvenido a CodeTrail!</h1>
-                    <p>El que sirve mejor es el que más se beneficia</p>
+                    <p>Holiswuis</p>
                     <button class="hidden" id="login">Iniciar Sesion</button>
                 </div>
                 <div class="toggle-panel toggle-right">

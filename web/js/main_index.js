@@ -12,7 +12,7 @@ loginBtn.addEventListener('click', () => {
     container.classList.remove("active");
 });
 
-document.getElementById('createForm').addEventListener('submit', function(event) {
+document.getElementById('register-form').addEventListener('submit', function(event) {
     // Obtener los valores de los campos de contraseña
     const password = document.getElementById('contrasena').value;
     const confirmPassword = document.getElementById('contrasenaV').value;
