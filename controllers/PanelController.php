@@ -18,6 +18,24 @@ class PanelController extends Controller
         $this->layout = 'codetrail/main';
         return $this->render('dashboardAdmin');
     }
+
+    public function actionDashboardCliente(){
+        
+        $this->layout = 'codetrail/main';
+        return $this->render('dashboardUser');
+    }
+
+    public function actionDashboardOperador(){
+        
+        $this->layout = 'codetrail/main';
+        return $this->render('dashboardEmployee');
+    }
+
+    public function actionEmpleados(){
+       // Si es PJAX, renderiza sin layout
+     
+        return $this->render('emp'); // Usar renderPartial para omitir el layout
+    }   
    
    
   

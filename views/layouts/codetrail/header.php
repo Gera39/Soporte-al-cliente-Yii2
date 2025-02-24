@@ -8,7 +8,7 @@
 					<button type="submit" class="search-btn"><i class='bx bx-search' ></i></button>
 				</div>
 			</form>
-			Modo nocturno<input type="checkbox" id="switch-mode" hidden>
+			<a href="#" class="nav-link">Modo Nocturno</a><input type="checkbox" id="switch-mode" hidden>
 			<label for="switch-mode" class="switch-mode"></label>
 			
 </nav>

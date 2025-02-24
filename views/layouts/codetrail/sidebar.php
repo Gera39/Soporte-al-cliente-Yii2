@@ -1,4 +1,8 @@
-
+<?php
+use yii\helpers\Html;
+use yii\helpers\Url;
+use yii\widgets\Pjax;
+?>
 	<!-- SIDEBAR -->
     <section id="sidebar">
             <a href="#" class="brand">
@@ -13,10 +17,14 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#">
-                    <i class='bx bxs-briefcase' class='icon-sidebar'  ></i>
-                        <span class="text">Empleados</span>
-                    </a>
+                <?= Html::a(
+            '<i class="bx bx-user"></i> Empleados',
+            ['panel/empleados'],
+            [
+                'data-pjax' => 1, // Activa PJAX
+                'data-pjax-container' => '#pjax-container', // Contenedor a actualizar
+            ]
+        ) ?>    
                 </li>
                 <li>
                     <a href="#" >

@@ -8,11 +8,13 @@ use app\widgets\Alert;
 use yii\bootstrap5\Breadcrumbs;
 use yii\bootstrap5\Html;
 use yii\bootstrap5\Nav;
+use yii\widgets\Pjax;
 use yii\bootstrap5\NavBar;
 
 $this->registerCssFile('@web/css/estilos_layout.css');
 $assetDir = Yii::$app->assetManager->getPublishedUrl('@app/assets');
 $this->registerJsFile('@web/js/main_panel.js');
+
 $this->registerCssFile('https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css');
 $this->registerCsrfMetaTags();
 $this->registerMetaTag(['charset' => Yii::$app->charset], 'charset');
@@ -26,6 +28,9 @@ $this->registerMetaTag(['name' => 'keywords', 'content' => $this->params['meta_k
 <html lang="<?= Yii::$app->language ?>" class="h-100">
 <head>
     <title>Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
     <?php $this->head() ?>
 </head>
 <body>
@@ -38,9 +43,14 @@ $this->registerMetaTag(['name' => 'keywords', 'content' => $this->params['meta_k
         <!-- navbar -->
         <?= $this->render('header', ['assetDir' => $assetDir]) ?>
         <!-- /.navbar -->
-
         <div id="main-content">
+        <?php Pjax::begin([
+            'id' => 'pjax-container', // ID único para el contenedor PJAX
+            'timeout' => 5000, // Tiempo máximo de espera para la respuesta
+            'enablePushState' => true, // Mantener la URL en el navegador
+        ]); ?>
         <?= $content?>
+        <?php Pjax::end();?>
         </div>
     </section>
 <?php $this->endBody() ?>
