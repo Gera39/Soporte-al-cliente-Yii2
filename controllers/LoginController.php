@@ -11,6 +11,8 @@ use app\models\LoginForm;
 use app\models\ContactForm;
 use yii\db\Command;
 use app\models\RegisterForm;
+// use app\controllers\User;
+use app\models\User;
 class LoginController extends Controller{
 
     public function actionIndex(){
@@ -26,17 +28,17 @@ class LoginController extends Controller{
 
     public function actionLoginCustom(){
         $datos = Yii::$app->request->post('LoginForm',[]);
-        $sql = "CALL inicio_sesion (:username,:pass )";
+        $sql = "CALL inicio_sesion(:username,:pass )";
         $result = Yii::$app->db->createCommand($sql, [
             ':username' => $datos['username'] ?? '',
             ':pass' => $datos['password'] ?? '',  
         ])->queryAll();
-        if(!empty($result) && $result[0]["resultado"] == 1){
+        if(!empty($result) && $result[0]["result"] == 200){
             $id = $result[0]['id'];
-            // $user = Users::findOne($id);
-            // if ($user) {
-            //     Yii::$app->user->login($user);
-            // }
+            $user = User::findOne($id);
+            if ($user) {
+                Yii::$app->user->login($user);
+            }
             return $this->redirect(['login/entrar' , 'id' => $id]);
         }else{
             return $this->redirect(['index', 'mensaje' =>'error']);

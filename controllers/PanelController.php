@@ -9,33 +9,31 @@ use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
+use app\models\User;
 
 class PanelController extends Controller
 {
-    
-   public function actionDashboardAdmin(){
-        
-        $this->layout = 'codetrail/main';
+    public $layout = 'codetrail/main';
+
+    public function actionDashboardAdmin(){
         return $this->render('dashboardAdmin');
     }
 
     public function actionDashboardCliente(){
-        
-        $this->layout = 'codetrail/main';
-        return $this->render('dashboardUser');
+        return $this->render('dashboardCliente');
     }
 
     public function actionDashboardOperador(){
-        
-        $this->layout = 'codetrail/main';
-        return $this->render('dashboardEmployee');
+        return $this->render('dashboardOperador');
     }
 
     public function actionEmpleados(){
-       // Si es PJAX, renderiza sin layout
-     
-        return $this->render('emp'); // Usar renderPartial para omitir el layout
-    }   
+        return $this->render('empleados'); 
+    }  
+    
+    public function actionServicios(){
+        return $this->render('servicios'); 
+    }  
    
    
   

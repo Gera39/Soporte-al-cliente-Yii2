@@ -18,19 +18,13 @@ use yii\widgets\Pjax;
                 </li>
                 <li>
                 <?= Html::a(
-            '<i class="bx bx-user"></i> Empleados',
-            ['panel/empleados'],
-            [
-                'data-pjax' => 1, // Activa PJAX
-                'data-pjax-container' => '#pjax-container', // Contenedor a actualizar
-            ]
-        ) ?>    
+                    '<i class="bx bx-user"></i> Empleados',
+                    ['panel/empleados']) ?>    
                 </li>
                 <li>
-                    <a href="#" >
-                    <i class='bx bx-server' class='icon-sidebar' ></i>
-                        <span class="text">Servicios</span>
-                    </a>
+                <?= Html::a(
+                    '<i class="bx bxs-widget"></i> Servicios',
+                    ['panel/servicios']) ?>   
                 </li>
                 <li>
                     <a href="#">
