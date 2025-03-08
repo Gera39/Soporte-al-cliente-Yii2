@@ -11,17 +11,19 @@ use Yii;
  * @property string $nombre
  * @property string $username
  * @property string $password
+ * @property string $UID
  * @property string $email
  * @property string $role
  * @property string $created_at
  * @property string $updated_at
  * @property string|null $last_login
- * @property int $is_active
+ * @property int $estado
  *
- * @property Messages[] $messages
- * @property TicketStatusHistory[] $ticketStatusHistories
- * @property Tickets[] $tickets
- * @property Tickets[] $tickets0
+ * @property Administradores $administradores
+ * @property Cliente $cliente
+ * @property HistorialResolucion[] $historialResolucions
+ * @property MensajesTicket[] $mensajesTickets
+ * @property Operadores $operadores
  */
 class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
 {
@@ -30,8 +32,8 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
      * ENUM field values
      */
     const ROLE_ADMIN = 'admin';
-    const ROLE_OPERATOR = 'operator';
-    const ROLE_CLIENT = 'client';
+    const ROLE_OPERADOR = 'operador';
+    const ROLE_CLIENTE = 'cliente';
 
     /**
      * {@inheritdoc}
@@ -48,15 +50,15 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     {
         return [
             [['last_login'], 'default', 'value' => null],
-            [['role'], 'default', 'value' => 'client'],
-            [['is_active'], 'default', 'value' => 1],
-            [['nombre', 'username', 'password', 'email'], 'required'],
+            [['role'], 'default', 'value' => 'cliente'],
+            [['estado'], 'default', 'value' => 1],
+            [['nombre', 'username', 'password', 'UID', 'email'], 'required'],
             [['role'], 'string'],
             [['created_at', 'updated_at', 'last_login'], 'safe'],
-            [['is_active'], 'integer'],
+            [['estado'], 'integer'],
             [['nombre', 'email'], 'string', 'max' => 100],
             [['username'], 'string', 'max' => 50],
-            [['password'], 'string', 'max' => 60],
+            [['password', 'UID'], 'string', 'max' => 250],
             ['role', 'in', 'range' => array_keys(self::optsRole())],
             [['username'], 'unique'],
             [['email'], 'unique'],
@@ -73,53 +75,64 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             'nombre' => 'Nombre',
             'username' => 'Username',
             'password' => 'Password',
+            'UID' => 'Uid',
             'email' => 'Email',
             'role' => 'Role',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
             'last_login' => 'Last Login',
-            'is_active' => 'Is Active',
+            'estado' => 'Estado',
         ];
     }
 
     /**
-     * Gets query for [[Messages]].
+     * Gets query for [[Administradores]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getMessages()
+    public function getAdministradores()
     {
-        return $this->hasMany(Messages::class, ['user_id' => 'id']);
+        return $this->hasOne(Administradores::class, ['usuario_id' => 'id']);
     }
 
     /**
-     * Gets query for [[TicketStatusHistories]].
+     * Gets query for [[Cliente]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getTicketStatusHistories()
+    public function getCliente()
     {
-        return $this->hasMany(TicketStatusHistory::class, ['changed_by' => 'id']);
+        return $this->hasOne(Cliente::class, ['usuario_id' => 'id']);
     }
 
     /**
-     * Gets query for [[Tickets]].
+     * Gets query for [[HistorialResolucions]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getTickets()
+    public function getHistorialResolucions()
     {
-        return $this->hasMany(Tickets::class, ['user_id' => 'id']);
+        return $this->hasMany(HistorialResolucion::class, ['id_usuario' => 'id']);
     }
 
     /**
-     * Gets query for [[Tickets0]].
+     * Gets query for [[MensajesTickets]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getTickets0()
+    public function getMensajesTickets()
     {
-        return $this->hasMany(Tickets::class, ['operator_id' => 'id']);
+        return $this->hasMany(MensajesTicket::class, ['id_remitente' => 'id']);
+    }
+
+    /**
+     * Gets query for [[Operadores]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getOperadores()
+    {
+        return $this->hasOne(Operador::class, ['usuario_id' => 'id']);
     }
 
 
@@ -131,8 +144,8 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     {
         return [
             self::ROLE_ADMIN => 'admin',
-            self::ROLE_OPERATOR => 'operator',
-            self::ROLE_CLIENT => 'client',
+            self::ROLE_OPERADOR => 'operador',
+            self::ROLE_CLIENTE => 'cliente',
         ];
     }
 
@@ -160,36 +173,34 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     /**
      * @return bool
      */
-    public function isRoleOperator()
+    public function isRoleOperador()
     {
-        return $this->role === self::ROLE_OPERATOR;
+        return $this->role === self::ROLE_OPERADOR;
     }
 
-    public function setRoleToOperator()
+    public function setRoleToOperador()
     {
-        $this->role = self::ROLE_OPERATOR;
+        $this->role = self::ROLE_OPERADOR;
     }
 
     /**
      * @return bool
      */
-    public function isRoleClient()
+    public function isRoleCliente()
     {
-        return $this->role === self::ROLE_CLIENT;
+        return $this->role === self::ROLE_CLIENTE;
     }
 
-    public function setRoleToClient()
+    public function setRoleToCliente()
     {
-        $this->role = self::ROLE_CLIENT;
+        $this->role = self::ROLE_CLIENTE;
     }
 
     
-   /**
-     * {@inheritdoc}
-     */
     public static function findIdentity($id)
     {
-        return static::findOne(['id' => $id]);
+        // return isset(self::$users[$id]) ? new static(self::$users[$id]) : null;
+        return self::findOne($id);
     }
 
     /**
@@ -197,7 +208,6 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
      */
     public static function findIdentityByAccessToken($token, $type = null)
     {
-        
         return null;
     }
 
@@ -209,7 +219,13 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
      */
     public static function findByUsername($username)
     {
-        return self::findOne(['username' => $username]);
+        // foreach (self::$users as $user) {
+        //     if (strcasecmp($user['username'], $username) === 0) {
+        //         return new static($user);
+        //     }
+        // }
+
+        return self::findOne(['username' => $username   ]);
     }
 
     /**
@@ -234,17 +250,6 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     public function validateAuthKey($authKey)
     {
         return true;
-    }
-
-    /**
-     * Validates password
-     *
-     * @param string $password password to validate
-     * @return bool if password provided is valid for current user
-     */
-    public function validatePassword($password)
-    {
-        return $this->password === $password;
     }
 
 }

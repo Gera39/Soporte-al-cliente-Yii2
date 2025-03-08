@@ -10,11 +10,10 @@ use yii\widgets\Pjax;
                 <span class="text">CodeTrail</span>
             </a>
             <ul class="side-menu top">
-                <li class="active">
-                    <a href="#" >
-                        <i class='bx bxs-dashboard' class='icon-sidebar'></i>
-                        <span class="text">Inicio</span>
-                    </a>
+                <li>
+                <?= Html::a(
+                    '<i class="bx bxs-dashboard"></i> Inicio',
+                    ['panel/dashboard-admin']) ?>    
                 </li>
                 <li>
                 <?= Html::a(
@@ -27,24 +26,41 @@ use yii\widgets\Pjax;
                     ['panel/servicios']) ?>   
                 </li>
                 <li>
-                    <a href="#">
-                    <i class='bx bxs-report' class='icon-sidebar' ></i>
-                        <span class="text">Reportes</span>
-                    </a>
+                <?= Html::a(
+                    '<i class="bx bxs-report"></i> Reportes',
+                    ['panel/reportes']) ?>   
                 </li>
                 <li>
-                    <a href="#">
-                    <i class='bx bx-stats' class='icon-sidebar'></i>
-                        <span class="text">Gráficas</span>
-                    </a>
+                <?= Html::a(
+                    '<i class="bx bxs-report"></i> Servicios Cliente',
+                    ['panel/servicios-cliente']) ?>   
+                </li>
+                <li>
+                <?= Html::a(
+                    '<i class="bx bx-stats"></i> Graficas',
+                    ['panel/graficas']) ?>   
+                </li>
+                <li>
+                <?= Html::a(
+                    '<i class="bx bx-stats"></i> Tickets',
+                    ['panel/tickets-empleado']) ?>
+                </li>
+                <li>
+                <?= Html::a(
+                    '<i class="bx bx-stats"></i> Tickets Cliente',
+                    ['panel/tickets-cliente']) ?>
+                </li>
+                <li>
+                <?= Html::a(
+                    '<i class="bx bx-conversation"></i> Chat',
+                    ['panel/chat']) ?>
                 </li>
             </ul>
             <ul class="side-menu">
                 <li>
-                    <a href="#">
-                        <i class='bx bxs-user' class='icon-sidebar'></i>
-                        <span class="text">Perfil</span>
-                    </a>
+                <?= Html::a(
+                    '<i class="bx bx-user"></i> Perfil',
+                    ['panel/perfil']) ?>
                 </li>
                 <li>
                     <a href="#" class="logout">

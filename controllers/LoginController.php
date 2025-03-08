@@ -46,6 +46,26 @@ class LoginController extends Controller{
         }
     }
 
+    public function actionRegisterCliente(){
+        $datos = Yii::$app->request->post('RegisterForm',[]);
+        $sql = "CALL crear_cliente(:username,:pass )";
+        $result = Yii::$app->db->createCommand($sql, [
+            ':username' => $datos['username'] ?? '',
+            ':pass' => $datos['password'] ?? '',  
+        ])->queryAll();
+        if(!empty($result) && $result[0]["result"] == 200){
+            $id = $result[0]['id'];
+            $user = User::findOne($id);
+            if ($user) {
+                Yii::$app->user->login($user);
+            }
+            return $this->redirect(['login/entrar' , 'id' => $id]);
+        }else{
+            return $this->redirect(['index', 'mensaje' =>'error']);
+         
+        }
+    }
+
     public function actionEntrar(){
         return $this->redirect(['panel/dashboard-admin']);
     }

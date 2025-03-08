@@ -1,41 +1,3 @@
-<?php
-	require_once ("../../Conexion/ConsumoApi.php");
-	$apiClient = new DatabaseApiClient("https://apicomi.codetrail.store/api");
-
-	$tickets = $apiClient->get("tickets");
-	$abierto = 0;
-	$cerrado = 0;
-	$internetA =0;
-	$telefoniaA = 0;
-	$internetC =0;
-	$telefoniaC = 0;
-	$beneficio = $apiClient->get("costos");
-
-	
-	foreach($tickets as $ticket){
-		if(strtolower($ticket["estado"]) == "abierto"){
-			if(strtolower(substr($ticket["nombre_servicio"],0,4)) == "inter"){
-				$internetA++;
-			} else {
-				$telefoniaA++;
-			}
-			$abierto++;
-			
-		}else if(strtolower($ticket["estado"]) == "cerrado"){
-			if(strtolower(substr($ticket["nombre_servicio"],0,4)) == "inter"){
-				$internetC++;
-			} else {
-				$telefoniaC++;
-			}
-			$cerrado++;
-		}
-	}
-	$internet = $internetA + $internetC;
-	$telefonia = $telefoniaA + $telefoniaC;
-
-?>
-
-
 <main>
 			<div class="head-title">
 				<div class="left">
@@ -54,25 +16,29 @@
 			</div>
 
 			<ul class="box-info">
-				<h3>Tickets Reportados</h3>
+				<li>
+				<span class="text d-flex align-items-center justify-content-between">
+					<h3 class="m-3">Tickets Reportados</h3>
+				</span>
+				</li>
 				<li>
 					<i class='bx bx-wifi' style="background-color:#ffffff; color:#000;"></i>
 					<span class="text">
-						<h3><?=$telefonia?></h3>
+						<h3>12</h3>
 						<p>Telefonía</p>
 					</span>
 				</li>
 				<li>
 					<i class='bx bx-phone-call'></i>
 					<span class="text">
-						<h3><?=$internet?></h3>
+						<h3>12</h3>
 						<p>Internet</p>
 					</span>
 				</li>
 				<li>
 					<i class='bx bx-money'></i>
 					<span class="text">
-						<h3>$<?=$beneficio[0]["total"]?></h3>
+						<h3>$3232</h3>
 						<p>Ganancias Obtenidas</p>
 					</span>
 				</li>
@@ -95,29 +61,19 @@
 							</tr>
 						</thead>
 						<tbody>
-							<?php
-								foreach($tickets as $ticket){
-							?>
+							
 							<tr>
 								<td>
-									<i class="bx bx-file"></i>
-									<p><?= $ticket["nombre_servicio"] ?></p>
+									<span>Internet</span>
 								</td>
-								<td><?= $ticket["fecha_creacion"]?></td>
+								<td>15/15/</td>
 								<!-- <td>
 								//$ticket["descripcion"]</td> -->
-								<?php 
-									if(strtolower($ticket["estado"]) == "abierto"){
-										$clase ="completed style='font-size:20px;'";
-									}else {
-										$clase ="process";
-									}
-								?>
-								<td><span class="status <?=$clase?>"><?=$ticket["estado"]?></span></td>
+								<!-- process -->
+								<td><span class="status completed style='font-size:20px;'">Abierto</span></td>
 
 							</tr>
-							<?php 
-						}?>
+							
 						</tbody>
 					</table>
 				</div>
@@ -132,24 +88,24 @@
 						<li class="completed">
 							<p class="lead"> <strong>Wi-Fi</strong> <br>
 								Abiertos <br> </p>
-								<strong class="display-5"><?=$internetA?></strong>
+								<strong class="display-5">123</strong>
 								<i class='bx bx-confused' style="font-size:40px;"></i>
 						</li>
 						<li class="completed">
 							<p class="lead"> <strong>Wi-Fi</strong> <br>
 								Cerrados 
 							</p>
-							<strong class="display-5"><?=$internetC?></strong>
+							<strong class="display-5">123</strong>
 							<i class='bx bx-happy-heart-eyes bx-tada' style=' font-size:40px; ' ></i>
 						</li>
 						<li class="not-completed">
 							<p class="lead"> <strong>Telefonía</strong> <br> Abiertos </p>
-							<strong class="display-5"><?=$telefoniaA?></strong>
+							<strong class="display-5">333</strong>
 							<i class='bx bx-confused' style="font-size:40px;"></i>
 						</li>
 						<li class="not-completed">
 							<p class="lead"> <strong>Telefonía</strong> <br> Cerrrados</p>
-							<strong class="display-5"><?=$telefoniaC?></strong>
+							<strong class="display-5">898</strong>
 							<i class='bx bx-happy-heart-eyes bx-tada' style=' font-size:40px;' ></i>
 						</li>
 					</ul>

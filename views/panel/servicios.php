@@ -10,14 +10,6 @@
             <h1>Servicios</h1>
             <ul class="breadcrumb">
                 <li>
-                    <?php 
-                   
-
-                     if(!Yii::$app->user->isGuest){
-                       var_dump(Yii::$app->user->identity);
-                     }
-
-                    ?>
                     <a href="#">Administrador</a>
                 </li>
                 <li><i class='bx bx-chevron-right'></i></li>
@@ -30,7 +22,11 @@
     </div>
 
     <ul class="box-info">
-        <h3>Contratados</h3>
+        <li>
+            <span class="text d-flex align-items-center justify-content-between">
+                <h3 class="m-3">Contratados</h3>
+            </span>
+        </li>
         <li>
             <i class='bx bxs-dollar-circle'></i>
             <span class="text">

@@ -61,7 +61,6 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        $this->layout = 'login/login';
         return $this->redirect(['login/index']);
     }
 

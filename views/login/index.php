@@ -5,17 +5,17 @@ use yii\widgets\ActiveForm;
 
 
 $mensaje = "none";
-if(isset($_GET["mensaje"])){
+if (isset($_GET["mensaje"])) {
     $mensaje = "block";
 }
 /* @var $model \app\models\LoginForm */
 
 ?>
-    
-    <div id="error-message" class="bg-danger text-white p-3 m-2" style="border-radius:33px; display: <?=$mensaje?>; ">Error de Contraseña o Usuario</div>
 
-    <div class="container" id="container">
-        <div class="form-container sign-up">
+<div id="error-message" class="bg-danger text-white p-3 m-2" style="border-radius:33px; display: <?= $mensaje ?>; ">Error de Contraseña o Usuario</div>
+
+<div class="container" id="container">
+    <div class="form-container sign-up">
         <?php
         ?>
 
@@ -24,6 +24,7 @@ if(isset($_GET["mensaje"])){
             'action' => ['login/login-custom'],
             'method' => 'post',
         ]); ?>
+
 
         <h1>Crear Cuenta</h1>
         <div class="social-icons">
@@ -41,45 +42,44 @@ if(isset($_GET["mensaje"])){
         <?= Html::submitButton('Crear Cuenta', ['class' => 'btn btn-primary']) ?>
 
         <?php ActiveForm::end(); ?>
+    </div>
+    <div class="form-container sign-in">
+        <?php $form = ActiveForm::begin([
+            'id' => 'sign-in-form',
+            'action' => ['login/login-custom'],
+            'method' => 'post',
+        ]); ?>
+
+        <h1>Iniciar Sesion</h1>
+        <div class="social-icons">
+            <?= Html::a('<i class="fa-brands fa-google"></i>', '#', ['class' => 'icon']) ?>
         </div>
-        <div class="form-container sign-in">
-            <?php $form = ActiveForm::begin([
-                'id' => 'sign-in-form',
-                'action' => ['login/login-custom'],
-                'method' => 'post',
-            ]); ?>
+        <span>o iniciar por usuario y contraseña</span>
 
-            <h1>Iniciar Sesion</h1>
-            <div class="social-icons">
-                <?= Html::a('<i class="fa-brands fa-google"></i>', '#', ['class' => 'icon']) ?>
-            </div>
-            <span>o iniciar por usuario y contraseña</span>
+        <?= $form->field($model, 'username')->textInput(['placeholder' => 'Correo o Usuario', 'required' => true])->label(false) ?>
+        <?= $form->field($model, 'password')->passwordInput(['placeholder' => 'Contraseña', 'required' => true])->label(false) ?>
 
-            <?= $form->field($model, 'username')->textInput(['placeholder' => 'Correo o Usuario', 'required' => true])->label(false) ?>
-            <?= $form->field($model, 'password')->passwordInput(['placeholder' => 'Contraseña', 'required' => true])->label(false) ?>
+        <?= Html::submitButton('Iniciar', ['class' => 'btn btn-primary']) ?>
 
-            <?= Html::submitButton('Iniciar', ['class' => 'btn btn-primary']) ?>
-
-            <?php ActiveForm::end(); ?>
-
-        </div>
-
-        <div class="toggle-container">
-            <div class="toggle">
-                <div class="toggle-panel toggle-left">
-                    <h1>Bienvenido a CodeTrail!</h1>
-                    <p>Holiswuis</p>
-                    <button class="hidden" id="login">Iniciar Sesion</button>
-                </div>
-                <div class="toggle-panel toggle-right">
-                <h1>Hola otra vez a CodeTrail!</h1>
-                    <p>Lo mejor es lo simple!
-                        --Jerry´s
-                    </p>
-                    <button class="hidden" id="register">Crear Cuenta</button>
-                </div>
-            </div>
-        </div>
+        <?php ActiveForm::end(); ?>
 
     </div>
 
+    <div class="toggle-container">
+        <div class="toggle">
+            <div class="toggle-panel toggle-left">
+                <h1>Bienvenido a CodeTrail!</h1>
+                <p>Holiswuis</p>
+                <button class="hidden" id="login">Iniciar Sesion</button>
+            </div>
+            <div class="toggle-panel toggle-right">
+                <h1>Hola otra vez a CodeTrail!</h1>
+                <p>Lo mejor es lo simple!
+                    --Jerry´s
+                </p>
+                <button class="hidden" id="register">Crear Cuenta</button>
+            </div>
+        </div>
+    </div>
+
+</div>

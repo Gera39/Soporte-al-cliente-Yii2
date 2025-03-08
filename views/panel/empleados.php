@@ -1,170 +1,215 @@
+<?php
 
+use yii\grid\GridView;
+use yii\helpers\Html;
+use yii\data\ArrayDataProvider;
+use yii\widgets\ActiveForm;
+use yii\bootstrap5\Modal;
+
+$clase ="";
+$correo ="";
+if(Yii::$app->session->hasFlash('error')){
+	$clase = "modal--show";
+	$correo = Yii::$app->session->getFlash('error');
+	Yii::$app->session->removeFlash('error');
+}
+?>
 <main>
-			<div class="head-title">
-				<div class="left">
-					<h1>Empleados</h1>
-					<ul class="breadcrumb">
-						<li>
-							<a href="#">Administrador</a>
-						</li>
-						<li><i class='bx bx-chevron-right' ></i></li>
-						<li>
-							<a class="active" href="#">Empleados</a>
-						</li>
-					</ul>
-				</div>
-				<!-- <a href="#" class="btn-download">
-					<i class='bx bxs-cloud-download' ></i>
-					<span class="text">Download PDF</span>
-				</a> -->
-			</div>
-
-			<ul class="box-info">
+	<div class="head-title">
+		<div class="left">
+			<h1>Empleados</h1>
+			<ul class="breadcrumb">
 				<li>
-				<i class='bx bxs-briefcase-alt-2'></i>
-					<span class="text">
-						<h3>78</h3>
-						<p>Empleados</p>
-					</span>
+					<a href="#">Administrador</a>
 				</li>
+				<li><i class='bx bx-chevron-right'></i></li>
 				<li>
-				<i class='bx bx-ghost' style="background-color:#000000; color:#ffffff;" ></i>
-
-					<span class="text">
-						<h3>89</h3>
-						<p>Inactivos</p>
-					</span>
+					<a class="active" href="#">Empleados</a>
 				</li>
-				<li>
-				<i class='bx bx-user-voice' style="background-color:#ffffff; color:#000000;"></i>
-
-					<span class="text">
-						<h3>89</h3>
-						<p>Activos</p>
-					</span>
-				</li>
-				
 			</ul>
+		</div>
+	</div>
 
+	<ul class="box-info">
+		<li>
+			<i class='bx bxs-briefcase-alt-2'></i>
+			<span class="text">
+				<h3><?= $empleados[0]['cantidad'] ?></h3>
+				<p>Empleados</p>
+			</span>
+		</li>
+		<li>
+			<i class='bx bx-ghost' style="background-color:#000000; color:#ffffff;"></i>
 
-			<div class="table-data">
-				<div class="order">
-					<div class="head">
-						<h3>Asignar Horario</h3>
-						<!-- <form action="" method="GET">
-						<input type="search" name="search"  style="border-radius:15px; outline:none; border:none;" placeholder="Search...">
-						<button type="submit" class="btn btn-primary botonchido "><i class='bx bx-search' ></i></button>
-						</form> -->
-						
-						<a href="#" data-bs-toggle="modal" data-bs-target="#myModal" class="btn btn-primary   botonchidoG" ><i class='bx bx-plus'></i>Empleado</a>
-						
-					</div>
-					
-				<form action="../Controlador/establecerHorario.php" method="POST">
-					   
-					  
+			<span class="text">
+				<h3><?= $empleados[0]['inactivo'] ?></h3>
+				<p>Bloqueados</p>
+			</span>
+		</li>
+		<li>
+			<i class='bx bx-user-voice' style="background-color:#ffffff; color:#000000;"></i>
 
-                <!-- Hora de Inicio y Finalización en una fila -->
-                <div class="row g-2 mb-2">
-                    <div class="col">
-                        <label for="horaInicio" class="form-label mb-1">Inicio</label>
-                        <input type="time" class="form-control form-control-sm" id="horaInicio" name="inicio" required>
-                    </div>
-                    <div class="col">
-                        <label for="horaFin" class="form-label mb-1">Fin</label>
-                        <input type="time" class="form-control form-control-sm" name="fin" id="horaFin" required>
-                    </div>
-                </div>
+			<span class="text">
+				<h3><?= $empleados[0]["activo"] ?></h3>
+				<p>Activos</p>
+			</span>
+		</li>
 
-                <!-- Días de la Semana en una fila -->
-                <div class="mb-2">
-                    <label class="form-label mb-1">Días</label>
-                    <div class="d-flex flex-wrap gap-2">
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" name="dias[]" value="lun" type="checkbox" id="lunes">
-                            <label class="form-check-label" for="lunes">Lun</label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" name="dias[]" value="mar" type="checkbox" id="martes">
-                            <label class="form-check-label" for="Martes">Mar</label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" name="dias[]" value="mie" type="checkbox" id="miércoles">
-                            <label class="form-check-label" for="Miércoles">Mié</label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" name="dias[]" value="jue" type="checkbox" id="jueves">
-                            <label class="form-check-label" for="Jueves">Jue</label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" name="dias[]" value="vie" type="checkbox" id="viernes">
-                            <label class="form-check-label" for="Viernes">Vie</label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" name="dias[]" value="sab" type="checkbox" id="sábado">
-                            <label class="form-check-label" for="Sábado">Sáb</label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" name="dias[]" value="dom" type="checkbox" id="domingo">
-                            <label class="form-check-label" for="Domingo">Dom</label>
-                        </div>
-                    </div>
-                </div><div class="text-center mt-3">
-                    <button type="submit" class="btn btn-primary btn-sm px-3">Guardar</button>
-                    <button type="reset" class="btn btn-secondary btn-sm px-3">Cancelar</button>
-                </div>
-				<div class="head m-5">
-						<h3>Empleados</h3>				
-					</div>
-					<table class="m-5 ">
-						<thead>
-							<tr class="text-center">
-								<th class="fs-5" >Nombre</th>
-								<th class="fs-5">Servicio</th>
-								<th class="fs-5">Horario</th>
-								<th class="fs-5">Estado</th>
-								<th class="fs-5">Establecer Horario</th>
-							</tr>
-						</thead>
-						<tbody>
-							<td><span class="status completed"><i class="bx bx-user"></i></span></td>
-
-							<td>
-							<input type="checkbox" class="form-check-input" value="7" name="empleados[]"  >
-							<span>Seleccionar</span>
-							</td>
-						</tbody>
-					</table>
-					</form>
-				</div>
-				<!-- <div class="todo">
-					<div class="head">
-						<h3>Todos</h3>
-						<i class='bx bx-plus' ></i>
-						<i class='bx bx-filter' ></i>
-					</div>
-					<ul class="todo-list">
-						<li class="completed">
-							<p>Todo List</p>
-							<i class='bx bx-dots-vertical-rounded' ></i>
-						</li>
-						<li class="completed">
-							<p>Todo List</p>
-							<i class='bx bx-dots-vertical-rounded' ></i>
-						</li>
-						<li class="not-completed">
-							<p>Todo List</p>
-							<i class='bx bx-dots-vertical-rounded' ></i>
-						</li>
-						<li class="completed">
-							<p>Todo List</p>
-							<i class='bx bx-dots-vertical-rounded' ></i>
-						</li>
-						<li class="not-completed">
-							<p>Todo List</p>
-							<i class='bx bx-dots-vertical-rounded' ></i>
-						</li>
-					</ul>
-				</div> -->
+	</ul>
+	<div class="table-data">
+		<div class="order">
+			<div class="head">
+				<h3>Lista de Empleados</h3>
+				<a href="#" data-bs-toggle="modal" data-bs-target="#myModal" class="btn btn-primary  p-2 "><i class='bx bx-plus'></i>Añadir empleado</a>
 			</div>
-		</main>
+
+			<div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
+				<div class="modal-dialog modal-lg modal-dialog-centered">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title text-dark" id="myModalLabel">Agregar Empleado</h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+						</div>
+
+						<div class="modal-body">
+							<?php $form = ActiveForm::begin([
+								'id' => 'empleado-form',
+								'action' => ['operador/guardar-operador'],
+								'method' => 'post',
+							]); ?>
+
+							<div class="mb-3">
+								<?= $form->field($model, 'nombre')->textInput([
+									'class' => 'form-control',
+									'id' => 'nombreEmpleado',
+									'required' => true
+								])->label('Nombre', ['class' => 'form-label text-dark'])
+								 ?>
+							</div>
+
+							<div class="mb-3">
+								<?= $form->field($model, 'email')->input('email', [
+									'class' => 'form-control',
+									'id' => 'emailEmpleado',
+									'required' => true
+								])->label('Correo Electrónico', ['class' => 'form-label text-dark']) ?>
+							</div>
+
+							<div class="mb-3">
+								<?= $form->field($model, 'password')->passwordInput([
+									'class' => 'form-control',
+									'id' => 'passwordEmpleado',
+									'required' => true,
+								])->label('Password', ['class' => 'form-label text-dark']) ?>
+							</div>
+
+							<div class="row g-2 mb-3">
+								<div class="col">
+									<?= $form->field($model, 'departamento')->dropDownList([
+										'Ingeniero' => 'Ingeniero',
+										'Tecnico' => 'Técnico',
+									], [
+										'class' => 'form-select',
+										'id' => 'departamentoEmpleado',
+										'prompt' => 'Selecciona un grado'
+									])->label('Departamento', ['class' => 'form-label text-dark']) ?>
+								</div>
+
+								<div class="col">
+									<?= $form->field($model, 'carrera')->dropDownList([
+										'Redes' => 'Redes',
+										'Telecomunicaciones' => 'Telecomunicaciones',
+										'Seguridad Informática' => 'Seguridad Informática',
+										'Desarrollo de Software' => 'Desarrollo de Software',
+										'Ciencia de Datos' => 'Ciencia de Datos',
+										'Ciberseguridad' => 'Ciberseguridad',
+										'Automatización y Robótica' => 'Automatización y Robótica',
+									], [
+										'prompt' => 'Selecciona una carrera', // Opción inicial vacía
+										'class' => 'form-select',
+										'id' => 'carreraEmpleado',
+										'required' => true
+									])->label('Carrera', ['class' => 'form-label text-dark']) ?>
+								</div>
+
+							</div>
+
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+								<?= Html::submitButton('Guardar', ['class' => 'btn btn-primary']) ?>
+							</div>
+
+							<?php ActiveForm::end(); ?>
+						</div>
+					</div>
+				</div>
+			</div>
+			<?=
+			GridView::widget([
+				'dataProvider' => new ArrayDataProvider(['allModels' => $empleados]),
+				'columns' => [
+					
+					[
+						'attribute' => 'nombre',
+						'headerOptions' => ['style' => 'text-align: center; font-size:16px;'],
+					],
+					[
+						'attribute' => 'email',
+						'headerOptions' => ['style' => 'text-align: center; font-size:16px;'],
+						'contentOptions' => ['style' => 'text-align: center;'],
+					],
+					[
+						'attribute' => 'departamento',
+						'headerOptions' => ['style' => 'text-align: center; font-size:16px;'],
+					],
+					[
+						'attribute' => 'Estado',
+						'headerOptions' => ['style' => 'text-align: center; font-size:16px;'],
+						'contentOptions' => function ($model) {
+							return ['style' => 'text-align: center; background-color:' . ($model['estado'] == '1' ? '#d4edda' : '#f5c6cb')];
+						},
+						'value' => function ($model) {
+							return ($model['estado']  == '1') ? 'Activo' : 'Bloqueado';
+						}
+					],
+					[
+						'attribute' => 'Permiso',
+						'format' => 'raw',
+						'headerOptions' => ['style' => 'text-align: center; font-size:16px;'],
+						'contentOptions' => ['style' => 'text-align: center;'],
+						'value' => function ($model) {
+							$text = ($model['estado'] == '1') ? 'Bloquear' : 'Desbloquear';
+							return Html::beginForm(['/operador/update-estatus', 'id' => $model['id']])
+								. Html::hiddenInput('User[estado]', $model['estado'] == '1' ? '0' : '1')
+								. Html::submitButton(
+									$text,
+									['class' => 'btn btn-sm ' . ($model['estado'] == '1' ? 'btn-danger' : 'btn-success')]
+								)
+								. Html::endForm();
+						}
+					],
+					[
+						'attribute' => 'Acciones',
+						'headerOptions' => ['style' => 'text-align: center; font-size:16px;'],
+						'contentOptions' => ['style' => 'text-align: center;'],
+						'format' => 'raw',
+						'value' => function ($model) {
+							return Html::a('<i class="bx bx-user"></i>', ['operador/view', 'id' => $model['id']], ['class' => 'btn btn-sm btn-primary '])
+								. Html::a('<i class="bx bx-edit"></i>', ['operador/update', 'id' => $model['id']], ['class' => 'btn btn-sm btn-warning'])
+								. Html::a('<i class="bx bx-trash"></i>', ['operador/delete', 'id' => $model['id']], ['class' => 'btn btn-sm btn-danger']);
+						}
+					]
+				],
+			]);
+			?>
+		</div>
+	</div>
+	<section id="mi_modal" class="modalito <?= $clase?>">
+		<div class="modal_container">
+			<img class="modal_img" src="<?= Yii::getAlias('@web') ?>/images/modal.svg" alt="Descripción de la imagen">
+			<h2 class="modal_title">Ups Algo salio mal!</h2>
+			<p class="modal_paraghap">Este correo <span class="bg-danger text-white p-2" style="border-radius:6px;"><?= $correo?></span> ya esta en uso intenta con otro correo</p>
+			<button id="cerrar_modal" class="btn btn-success" style="width: 200px;">Entendido</button>
+		</div>
+	</section>
+</main>
