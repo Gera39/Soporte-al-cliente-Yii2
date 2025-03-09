@@ -47,7 +47,7 @@ $this->title = "Operador " . $model->nombre;
             <div class="head">
                 <h2><?= Html::encode('Reportes del operador  ' . $model->nombre) ?><i class='bx bx-message-square-error' style="font-size: 50px; color:red;"></i></h2>
             </div>
-            <?= $this->render('/tables/_reportes', ['reportes' =>  $model->getOperadores()->one()->getReporteOperadores()->all()]);?>
+            <?= $this->render('/tables/_reportes', ['reportes' =>  $model->getOperadores()->one()->getReporteOperadores()->where(['!=','id_remitente',$model->getOperadores()->one()->id])->all()]);?>
             <br>
             <br>
             <br>

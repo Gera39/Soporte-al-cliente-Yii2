@@ -64,7 +64,7 @@ class Services extends \yii\db\ActiveRecord
      */
     public function getPaquetes()
     {
-        return $this->hasMany(Packages::class, ['id' => 'paquete_id'])->viaTable('paquete_servicios', ['servicio_id' => 'id']);
+        return $this->hasMany(Paquete::class, ['id' => 'paquete_id'])->viaTable('paquete_servicios', ['servicio_id' => 'id']);
     }
 
 }

@@ -1,6 +1,3 @@
-<?php
- use app\models\User;
-?>
 
 
 

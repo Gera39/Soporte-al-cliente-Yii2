@@ -7,6 +7,7 @@ use app\models\ReporteOperadores;
 use Yii;
 use yii\web\Controller;
 use app\models\User;
+use app\models\Operador;
 use app\models\Tickets;
 use yii\web\NotFoundHttpException;
 
@@ -26,7 +27,7 @@ class OperadorController extends Controller
             // Si la solicitud es AJAX, responde con JSON
             if (Yii::$app->request->isAjax) {
                 Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-    
+
                 $nuevoEstado = Yii::$app->request->post('estado');
                 $model->estado = $nuevoEstado;
                 if ($id = Yii::$app->request->post('id')) {
@@ -38,15 +39,14 @@ class OperadorController extends Controller
                     return ['status' => 'error', 'message' => 'No se pudo actualizar el estado'];
                 }
             }
-            // Si la solicitud es normal (formulario), procesar y redirigir
             if ($model->load($this->request->post()) && $model->save()) {
                 return $this->redirect(['panel/empleados']);
             }
         }
-    
+
         return $this->redirect('panel/empleados');
     }
-    
+
     public function actionGuardarOperador()
     {
         $request = Yii::$app->request;
@@ -79,46 +79,59 @@ class OperadorController extends Controller
 
         throw new NotFoundHttpException('The requested page does not exist.');
     }
-    
-    
+
+
     public function actionFiltrar($estado, $idOperador)
     {
-    
-    $tickets = Tickets::find()->where(['estado_ticket' => $estado, 'id_operador' => $idOperador])->all();
-    return $this->renderPartial('/tables/_tickets', ['tickets' => $tickets]);
+
+        $tickets = Tickets::find()->where(['estado_ticket' => $estado, 'id_operador' => $idOperador])->all();
+        return $this->renderPartial('/tables/_tickets', ['tickets' => $tickets]);
     }
 
+    public function actionUpdate($id)
+    {
+        $model = $this->findModel($id);
+        $modelOperador = $this->findModelOperador($id);
+        $model->grado = explode(' ', $modelOperador->departamento)[0]; // Asignar el valor temporal
 
+        if ($this->request->isPost) {
+            $modelM = $this->request->post()['User']['grado'];
 
-    
+            $model->load($this->request->post());
+            $modelOperador->load($this->request->post());
+            $modelOperador->departamento = $modelM . " " . $this->request->post()['Operador']['departamento'];
+
+            if ($model->validate() && $modelOperador->validate()) {
+                $model->save();
+                $modelOperador->save();
+
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
+        }
+
+        return $this->render('update', [
+            'model' => $model,
+            'modelOperador' => $modelOperador,
+        ]);
+    }
+
+    protected function findModelOperador($id)
+    {
+        if (($model = Operador::findOne(['usuario_id' => $id])) !== null) {
+            return $model;
+        }
+        throw new NotFoundHttpException('El operador no existe.');
+    }
+
     public function actionView($id)
     {
+
         $model = $this->findModel($id);
         return $this->render('view', [
             'model' => $model,
         ]);
     }
 
-    // public function actionUpdateEstatusReporte($id){
-    
-    //     $model= $this->findModelTicket($id);
-    //     if ($model->load($this->request->post()) && $model->save()) {
-    //         return $this->redirect(['operador/view', 'id' => $model->getOperador()->one()->getUsuario()->one()->id]);
-    //         // return $this->redirect(['panel/empleados']);
-    //     }
-    // }
-    // public function actionUpdateEstatusReporte($id,$estado)
-    // {
-    //     \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-    
-    //     $model = $this->findModelTicket($id);
-    //     $model->estado_reporte = $estado;
-    //     if ($model->save()) {
-    //         return ['success' => true];
-    //     }
-    //     return ['success' => false];
-    // }
-    
     protected function findModelTicket($id)
     {
         if (($model = ReporteOperadores::findOne(['id' => $id])) !== null) {

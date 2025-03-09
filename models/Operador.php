@@ -22,7 +22,6 @@ use Yii;
 class Operador extends \yii\db\ActiveRecord
 {
 
-
     /**
      * {@inheritdoc}
      */
@@ -37,7 +36,7 @@ class Operador extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['departamento', 'turno', 'dias'], 'default', 'value' => null],
+            [['departamento','turno', 'dias'], 'default', 'value' => null],
             [['usuario_id'], 'required'],
             [['usuario_id'], 'integer'],
             [['departamento'], 'string', 'max' => 100],

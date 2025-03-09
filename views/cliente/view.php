@@ -5,8 +5,8 @@ use yii\helpers\Url;
 
 /** @var yii\web\View $this */
 /** @var app\models\Seccion $model */
-
-$this->title = "Cliente " . $model->nombre;
+$nombre = ucfirst($model->nombre);
+$this->title = "Cliente: " . $nombre; 
 ?>
 <main>
 
@@ -19,7 +19,7 @@ $this->title = "Cliente " . $model->nombre;
                 </li>
                 <li><i class='bx bx-chevron-right'></i></li>
                 <li>
-                    <a class="active" href="#">Empleados</a>
+                    <a class="active" href="#">Clientes</a>
                 </li>
             </ul>
         </div>
@@ -40,17 +40,18 @@ $this->title = "Cliente " . $model->nombre;
             </p>
 
             <div class="head">
-                <h2><?= Html::encode('Informacion del operador  ' . $model->nombre) ?></h2>
+                <h2><?= Html::encode('Informacion del cliente  ' . $nombre) ?></h2>
             </div>
                 <?= $this->render('_informacion', ['model' => $model->getCliente()->one()]);?>
             <br>
             <div class="head">
-                <h2><?= Html::encode('Reportes del operador  ' . $model->nombre) ?><i class='bx bx-message-square-error' style="font-size: 50px; color:red;"></i></h2>
+                <h2><?= Html::encode('Reportes del cliente  ' . $nombre) ?><i class='bx bx-message-square-error' style="font-size: 50px; color:red;"></i></h2>
             </div>
-            <?= $this->render('_reportes', ['reportes' =>  $model->getCliente()->one()->getReporteOperadores()->all()]);?>
+            
+            <?= $this->render('_reportes', ['reportes' =>  $model->getCliente()->one()->getReporteOperadores()->where(['!=', 'id_remitente', $model->getCliente()->one()->id])->all()]); ?>
             <br>
             <div class="head">
-                <h2><?= Html::encode('Tickets asignados a ' . $model->nombre) ?></h2>
+                <h2><?= Html::encode('Tickets levantados de ' . $nombre) ?></h2>
                 <?php
                 $idOperador = $model->getCliente()->one()->id;
                 ?>

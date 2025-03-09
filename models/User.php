@@ -34,7 +34,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     const ROLE_ADMIN = 'admin';
     const ROLE_OPERADOR = 'operador';
     const ROLE_CLIENTE = 'cliente';
-
+    public $grado;
     /**
      * {@inheritdoc}
      */
@@ -49,6 +49,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     public function rules()
     {
         return [
+            [['grado'], 'string'],
             [['last_login'], 'default', 'value' => null],
             [['role'], 'default', 'value' => 'cliente'],
             [['estado'], 'default', 'value' => 1],
@@ -62,6 +63,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             ['role', 'in', 'range' => array_keys(self::optsRole())],
             [['username'], 'unique'],
             [['email'], 'unique'],
+            ['email', 'email', 'message' => 'El correo ingresado no es válido.'],
         ];
     }
 

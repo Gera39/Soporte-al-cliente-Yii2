@@ -10,8 +10,7 @@ echo DetailView::widget([
                 $usuario = $model->getUsuario()->one();
                 $estadoTexto = ($usuario && $usuario->estado == '1') ? 'Activo' : 'Bloqueado';
                 $clase = ($usuario && $usuario->estado == '1') ? 'btn-success' : 'btn-danger';
-                $rol = $usuario ? $usuario->role : 'N/A';
-                return "<span class='btn $clase btn-block' onclick='mostrarAlerta({$usuario->id},\"$estadoTexto\",\"$rol\")' style='padding: 5px; display: block; cursor:default;'>$estadoTexto</span>";
+                return "<span class='btn $clase btn-block' onclick='mostrarAlerta({$usuario->id},\"$estadoTexto\")' style='padding: 5px; display: block; cursor:default;'>$estadoTexto</span>";
             },
         ],
         [
@@ -23,7 +22,7 @@ echo DetailView::widget([
         [
             'label' => 'Email',
             'value' => function ($model) {
-                return ucfirst($model->getUsuario()->one()->email);
+                return $model->getUsuario()->one()->email;
             },
         ],
         [
@@ -43,21 +42,21 @@ echo DetailView::widget([
             'value' => function ($model){
                 return $model->departamento;
             },
-            'visible' =>  Yii::$app->user->identity->role === 'admin' && $model->getUsuario()->one()->role === 'operador' ,
+            
         ],
         [
             'label' => 'Horario',
             'value' => function ($model){
                 return $model->turno;
             },
-            'visible' =>  Yii::$app->user->identity->role === 'admin' && $model->getUsuario()->one()->role === 'operador',
+    
         ],
         [
             'label' => 'Dias',
             'value' => function ($model){
                 return $model->dias;
             },
-            'visible' =>  Yii::$app->user->identity->role === 'admin' && $model->getUsuario()->one()->role === 'operador',
+    
         ],
     ],
 ]);

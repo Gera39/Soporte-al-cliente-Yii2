@@ -610,6 +610,13 @@ body {
 }
 
 
+.operador-form{
+	display: flex;
+	padding: 1em;
+	text-align: center;
+	align-items: center;
+	justify-content: space-around;
+}
 
 @media screen and (max-width: 768px) {
 	#sidebar {

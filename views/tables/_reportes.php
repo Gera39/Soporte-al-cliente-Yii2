@@ -46,16 +46,7 @@ echo  GridView::widget([
                 return Html::a($model->getCliente()->one()->getUsuario()->one()->nombre, ['cliente/view', 'id' => $model->getCliente()->one()->getUsuario()->one()->id]);
             },
         ],
-        [
-            'label' => 'Operador',
-            'headerOptions' => ['style' => ' text-align: center;'],
-            'contentOptions' => ['style' => 'text-align: center;'],
-            'visible' => Yii::$app->user->identity->role === 'admin',
-            'format' => 'raw',
-            'value' => function ($model) {
-                return Html::a($model->getOperador()->one()->getUsuario()->one()->nombre, ['operador/view', 'id' => $model->id_operador]);
-            },
-        ],
+       
 
     ],
 ]) 

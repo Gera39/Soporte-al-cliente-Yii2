@@ -68,10 +68,10 @@ cerrarModal.addEventListener('click', function(){
 });
 
 
-var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
 
-function mostrarAlerta(idUsuario, estadoActual,rol) {
+
+function mostrarAlerta(idUsuario, estadoActual) {
   const swalWithBootstrapButtons = Swal.mixin({
       customClass: {
           confirmButton: "btn btn-success",
@@ -79,15 +79,12 @@ function mostrarAlerta(idUsuario, estadoActual,rol) {
       },
       buttonsStyling: false
   });
-  console.log(idUsuario);
-  console.log(estadoActual);
-  console.log(rol);
   swalWithBootstrapButtons.fire({
       title: "¿Estás seguro?",
-      text: "El operador está actualmente " + estadoActual + ",¿Desea bloquearlo?",
+      text: "El operador está actualmente " + estadoActual + ",¿Desea " + (estadoActual === "Activo" ? "bloquear" : "activar") + " ?",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonText: "Sí, bloquear operador",
+      confirmButtonText: "Sí, "+ (estadoActual === "Activo" ? "bloquear" : "activar") + "!",
       cancelButtonText: "No, cancelar",
       reverseButtons: true
   }).then((result) => {

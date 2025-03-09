@@ -37,7 +37,7 @@ class PanelController extends Controller
     }  
     
     public function actionServicios(){
-        return $this->render('servicios'); 
+        return $this->redirect(['servicio/index']); 
     } 
 
     public function actionReportes(){
