@@ -22,7 +22,7 @@ use yii\widgets\Pjax;
                 </li>
                 <li>
                 <?= Html::a(
-                    '<i class="bx bxs-widget"></i> Servicios',
+                    '<i class="bx bxs-widget"></i> Paquetes',
                     ['panel/servicios']) ?>   
                 </li>
                 <li>
@@ -33,7 +33,7 @@ use yii\widgets\Pjax;
                 <li>
                 <?= Html::a(
                     '<i class="bx bxs-report"></i> Servicios Cliente',
-                    ['panel/servicios-cliente']) ?>   
+                    ['cliente/servicios-cliente']) ?>   
                 </li>
                 <li>
                 <?= Html::a(
@@ -48,7 +48,7 @@ use yii\widgets\Pjax;
                 <li>
                 <?= Html::a(
                     '<i class="bx bx-stats"></i> Tickets Cliente',
-                    ['panel/tickets-cliente']) ?>
+                    ['cliente/ticket-cliente']) ?>
                 </li>
                 <li>
                 <?= Html::a(
@@ -63,10 +63,9 @@ use yii\widgets\Pjax;
                     ['panel/perfil']) ?>
                 </li>
                 <li>
-                    <a href="#" class="logout">
-                        <i class='bx bxs-log-out-circle'></i>
-                        <span class="text">Logout</span>
-                    </a>
+                <?= Html::a(
+                    '<i class="bx bxs-log-out-circle"></i> Logout',
+                    ['login/logout']) ?>
                 </li>
                
                

@@ -1,0 +1,129 @@
+<?php
+
+use yii\data\ArrayDataProvider;
+use yii\grid\GridView;
+use yii\helpers\Html;
+use yii\helpers\Url;
+
+$dataProvider = new ArrayDataProvider([
+    'allModels' => $paquetes,
+    'pagination' => ['pageSize' => false],
+]);
+echo GridView::widget([
+    'dataProvider' => $dataProvider,
+    'summary' => false,
+    'columns' => [
+        
+        [
+            'label' => 'Nombre',
+            'format' => 'raw',
+            'value' => 'nombre_paquete',
+            'contentOptions' => function ($model) {
+                return (Yii::$app->user->identity->role !== 'admin') ? ['style'=> 'text-align:center;'] : ['style' => 'text-align: center; background-color:' . ($model->estado == 'activo' ? '#d4edda' : '#f5c6cb')];
+            },
+            'headerOptions' => ['style' => 'text-align: center;'],
+        ],
+        'descripcion',
+        [
+            'attribute' => 'Precio',
+            'headerOptions' => ['style' => 'text-align: center;'],
+            'contentOptions' => ['style' => 'width: 10%;text-align: center;'],
+            'value' => function ($model) {
+                return '$' . $model->precio;
+            }
+        ],
+        [
+            'attribute' => 'Servicios',
+            'headerOptions' => ['style' => 'text-align: center;'],
+            'contentOptions' => ['style' => 'text-align: center;'],
+            'format' => 'raw',
+            'value' => function ($model) {
+                if ($model->servicios != null) {
+                    $servicios = $model->servicios;
+
+                    $servicios = array_map(function ($servicio) {
+                        return $servicio->nombre_service;
+                    }, $servicios);
+                    return implode(', ', $servicios);
+                } else {
+                    return "<span class='btn btn-danger' style='cursor:default;'>No hay servicios</span>";
+                }
+            }
+        ],
+        [
+            'label' => 'Acciones',
+            'format' => 'raw',
+            'visible' => Yii::$app->user->identity->role === 'admin',
+            'value' => function ($model) {
+
+                $servicios = $model->servicios;
+
+                $servicios = array_map(function ($servicio) {
+                    return $servicio->id;
+                }, $servicios);
+                $clase = ($model->estado == 'activo') ? 'btn-success' : 'btn-danger';
+                $estadoTexto = ($model && $model->estado == 'activo') ? 'Activo' : 'Bloqueado';
+                return  Html::a('<i class="bx bx-pencil"></i>', '#', [
+                    'class' => 'btn btn-primary btn-editar-paquete',
+                    'data-bs-toggle' => 'modal',
+                    'data-bs-target' => '#myModalPaquete',
+                    'data-id' => $model->id,
+                    'data-nombre' => $model->nombre_paquete,
+                    'data-descripcion' => $model->descripcion,
+                    'data-precio' => $model->precio,
+                    'data-servicios' => json_encode($servicios),
+                ]) .
+                    ' <a class="btn '.$clase.'" onclick="mostrarAlerta(' . $model->id . ',\'' . $estadoTexto . '\',\'paquete\')" href="#"><i class="bx bx-block"></i></a>';
+            }
+        ],
+        [
+            'label' => 'Compra',
+            'format' => 'raw',
+            'contentOptions' => ['style' => 'text-align: center;'],
+            'visible' => Yii::$app->user->identity->role === 'cliente' && $permiso === 'comprados',
+            'value' => function ($model) {
+                $idCliente = Yii::$app->user->identity->cliente->id;
+                return Html::a('<i class="bx bx-cart"></i>', '#', [
+                    'class' => 'btn btn-success',
+                    'onclick' => 'mostrarCompra(' . $model->id . ', ' . $idCliente. ')',
+                ]);
+            }
+        ],
+    ],
+]);
+?>
+    <?php
+    $url = Url::to(['paquete/update-paquete']);
+    $script = <<<JS
+        $('#myModalPaquete').on('show.bs.modal', function (event) {
+            let button = $(event.relatedTarget); // Botón que abrió el modal
+            let modal = $(this);
+
+            // Verificar si se pasó un ID (actualización) o no (creación)
+            let id = button.data('id');
+
+            if (id) {
+                // Actualización: cambiar título y llenar campos
+                modal.find('.modal-title').text('Actualizar paquete');
+                modal.find('#paqueteform-nombre_paquete').val(button.data('nombre'));
+                modal.find('#paqueteform-descripcion').val(button.data('descripcion'));
+                modal.find('#paqueteform-precio').val(button.data('precio'));
+                
+                // Para los checkboxes de servicios, si envías un array en data-servicios, puedes hacer:
+                var servicios = button.data('servicios'); // Asegúrate de que venga como array o JSON.parse()
+                modal.find('input[name="PaqueteForm[servicios][]"]').each(function(){
+                    var checkbox = $(this);
+                    if (servicios.includes(parseInt(checkbox.val()))) {
+                        checkbox.prop('checked', true);
+                    } else {
+                        checkbox.prop('checked', false);
+                    }
+                });
+                
+                // También puedes modificar el action del formulario si es necesario:
+                modal.find('form').attr('action', '$url&id=' + id);
+            } 
+        });
+    JS;
+    $this->registerJs($script);
+    ?>

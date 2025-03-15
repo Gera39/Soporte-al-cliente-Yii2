@@ -38,6 +38,9 @@ class Paquete extends \yii\db\ActiveRecord
             [['nombre_paquete', 'descripcion', 'precio'], 'required'],
             [['precio'], 'integer'],
             [['nombre_paquete', 'descripcion'], 'string', 'max' => 100],
+            [['estado'], 'string'],
+            [['estado'], 'default', 'value' => 'activo'],
+            [['estado'], 'in', 'range' => ['activo', 'inactivo']],
         ];
     }
 
@@ -51,6 +54,7 @@ class Paquete extends \yii\db\ActiveRecord
             'nombre_paquete' => 'Nombre Paquete',
             'descripcion' => 'Descripcion',
             'precio' => 'Precio',
+            'estado' => 'Estado',
         ];
     }
 

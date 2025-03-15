@@ -9,7 +9,6 @@ $dataProvider = new ArrayDataProvider([
 echo GridView::widget([
     'dataProvider' => $dataProvider,
     'columns' => [
-        ['class' => 'yii\grid\SerialColumn'],
         [
             'label' => 'Prioridad',
             'format' => 'raw',
@@ -65,7 +64,31 @@ echo GridView::widget([
                 return $model->estado_ticket; 
             }
         ],
-        'fecha_ticket',
+        [
+            'label' => 'Fecha Creación',
+            'format' => 'raw',
+            'contentOptions' => ['style' => 'text-align: center;'],
+            'value' => function ($model) {
+                return date('d/m/Y', strtotime($model->fecha_ticket));
+            }
+        ],
+        [
+            'label' => 'Acciones',
+            'format' => 'raw',
+            'contentOptions' => ['style' => 'text-align: center;'],
+            'value' => function ($model) {
+                return Html::a('Ver Ticket', ['ticket/view', 'id' => $model->id], ['class' => 'btn btn-primary']).
+                       Html::a('<i class="bx bx-pencil"></i>', ['ticket/view', 'id' => $model->id], ['class' => 'm-1 btn btn-success']);
+            }
+        ],
+        [
+            'label' => 'Chat',
+            'format' => 'raw',
+            'contentOptions' => ['style' => 'text-align: center;'],
+            'value' => function ($model) {
+                return Html::a('<i class="bx bx-conversation" > </i>', ['cliente/chat', 'id' => $model->id], ['class' => 'btn btn-primary']);
+            }
+        ]
         
     ],
 ]);

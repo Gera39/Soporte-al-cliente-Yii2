@@ -21,7 +21,6 @@ use yii\helpers\Url;
                     <div>
                         <a href="#" data-bs-toggle="modal" data-bs-target="#myModalServicio<?=$idServicio?>" style="font-size:30px;"><i class="bx bx-edit-alt"></i></a>
                         <?= Html::a('<i class="bx bx-trash"></i>', ['servicio/delete', 'id' => $idServicio], ['style' => 'font-size:30px;']); ?>
-                        <?= Html::a('<i class="bx bx-edit-alt"></i>', ['servicio/view', 'id' => $idServicio], ['style' => 'font-size:30px;']); ?>
                     </div>
                     
                     <?= $this->render('_modal', ['servicioForm' => $servi,'direccion' => 'update','id' => $idServicio]) ?>
@@ -32,5 +31,5 @@ use yii\helpers\Url;
     </div>
 
                     
-    <?= $this->render('_modal', ['servicioForm' => $servicioForm,'direccion' => 'guardar','id' => 0]) ?>
+    <?= $this->render('_modal', ['servicioForm' => $servicioForm,'direccion' => 'guardar','id' => '0']) ?>
   

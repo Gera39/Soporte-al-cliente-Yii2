@@ -5,8 +5,7 @@ use yii\helpers\Url;
 
 /** @var yii\web\View $this */
 /** @var app\models\Seccion $model */
-
-$this->title = "Servicio " . $model->nombre_service;
+$this->title = "Ticket ID: #".$model->id; 
 ?>
 <main>
 
@@ -19,9 +18,8 @@ $this->title = "Servicio " . $model->nombre_service;
                 </li>
                 <li><i class='bx bx-chevron-right'></i></li>
                 <li>
-                    <a class="active" href="#">Servicios</a>
+                    <a class="active" href="#">Tickets</a>
                 </li>
-                
             </ul>
         </div>
     </div>
@@ -30,21 +28,12 @@ $this->title = "Servicio " . $model->nombre_service;
         <div class="order">
             <p>
                 <?= Html::a('Actualizar', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-                <?= Html::a('Borrar', ['delete', 'id' => $model->id], [
-                    'class' => 'btn btn-danger',
-                    'data' => [
-                        'confirm' => 'Apoco si ?',
-                        'method' => 'post',
-                    ],
-                ]) ?>
-
             </p>
 
             <div class="head">
-                <h2><?= Html::encode('Paquetes  del servicio  ' . $model->nombre_service) ?></h2>
+                <h2><?= Html::encode('Informacion del ticket') ?></h2>
             </div>
-                <?= $this->render('_paquetes', ['model' => $model->getServicios()->all()]);?>
-            <br>
+            <?= $this->render('_informacion',['model' => $model]);?>
         </div>
     </div>
 </main>

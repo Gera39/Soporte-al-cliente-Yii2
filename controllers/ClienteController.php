@@ -1,15 +1,20 @@
 <?php
 
 namespace app\controllers;
+
 use Yii;
 use app\models\Cliente;
 use app\models\User;
 use yii\web\Controller;
 use app\models\Tickets;
-use app\models\Operador;
+use app\models\Paquete;
+use app\models\Categories;
+use app\models\PaquetesClientes;
+use app\models\TicketForm;
 use yii\web\NotFoundHttpException;
 
-class ClienteController extends Controller {
+class ClienteController extends Controller
+{
 
     public $layout = 'codetrail/main';
 
@@ -23,13 +28,66 @@ class ClienteController extends Controller {
         ]);
     }
 
-    public function actionUpdate($id){
-        $model = $this->findCliente($id);
-        return $this->render('update' , ['model' => $model]);
+   
+    public function actionPaquetesComprados()
+    {
+        $cliente = $this->findCliente(Yii::$app->user->identity->cliente->id);
+        if (!$cliente) {
+            throw new \yii\web\NotFoundHttpException('Cliente no encontrado.');
+        }
+        $paquetes = $this->enlazarPaquetes($cliente->id);
+        return $this->renderPartial('/servicio/_paquetes', ['paquetes' => $paquetes, 'permiso' => 'no']);
+    }
+    public function paquetesComprado($id){
+        // Obtener los IDs de los paquetes comprados por el cliente
+        $paquetesComprados = (new \yii\db\Query())
+            ->select('id_paquetes_servicios')
+            ->from('paquetes_clientes')
+            ->where(['id_cliente' => $id])
+            ->column();
+        return $paquetesComprados;
     }
 
-    protected function findCliente($id){
-        if(($model = Cliente::findOne(['id' => $id])) !== null){
+    public function enlazarPaquetes(){
+        $paquetesComprados = $this->paquetesComprado(Yii::$app->user->identity->cliente->id);
+        $paquetes = Paquete::find()
+        ->where(['id' => $paquetesComprados])
+        ->andWhere(['estado' => 'activo'])
+        ->all();
+        return $paquetes;
+    }
+
+
+    public function actionServiciosCliente()
+    {   
+        $cliente = $this->findCliente(Yii::$app->user->identity->cliente->id);
+        if (!$cliente) {
+            throw new \yii\web\NotFoundHttpException('Cliente no encontrado.');
+        }
+        // Obtener los IDs de los paquetes comprados por el cliente
+        $paquetesComprados = $this->paquetesComprado($cliente->id);
+        // Obtener los paquetes que NO están en la lista de paquetes comprados
+        $paquetes = Paquete::find()
+            ->where(['not in', 'id', $paquetesComprados])
+            ->andWhere(['estado' => 'activo']) // Solo paquetes activos
+            ->all();
+
+        $permiso = 'comprados';
+        if (Yii::$app->request->isAjax) {
+            Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+            return $this->renderPartial('/servicio/_paquetes', ['paquetes' => $paquetes, 'permiso' => $permiso]);
+        }
+        return $this->render('servicio', ['paquetes' => $paquetes , 'permiso' => $permiso]);
+    }
+    public function actionUpdate($id)
+    {
+        $model = $this->findCliente($id);
+        return $this->render('update', ['model' => $model]);
+    }
+
+    protected function findCliente($id)
+    {
+        if (($model = Cliente::findOne(['id' => $id])) !== null) {
             return $model;
         }
         throw new NotFoundHttpException('no quiso salir');
@@ -46,9 +104,8 @@ class ClienteController extends Controller {
 
     public function actionFiltrar($estado, $idOperador)
     {
-   
-    $tickets = Tickets::find()->where(['estado_ticket' => $estado, 'id_cliente' => $idOperador])->all();
-    return $this->renderPartial('/cliente/_tickets', ['tickets' => $tickets]);
+        $tickets = Tickets::find()->where(['estado_ticket' => $estado, 'id_cliente' => $idOperador])->all();
+        return $this->renderPartial('/cliente/_tickets', ['tickets' => $tickets]);
     }
 
     public function actionUpdateEstatus($id = null)
@@ -62,7 +119,7 @@ class ClienteController extends Controller {
             // Si la solicitud es AJAX, responde con JSON
             if (Yii::$app->request->isAjax) {
                 Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-    
+
                 $nuevoEstado = Yii::$app->request->post('estado');
                 $model->estado = $nuevoEstado;
                 if ($id = Yii::$app->request->post('id')) {
@@ -76,11 +133,30 @@ class ClienteController extends Controller {
             }
             // Si la solicitud es normal (formulario), procesar y redirigir
             if ($model->load($this->request->post()) && $model->save()) {
-        return $this->redirect('panel/empleados');
-                
+                return $this->redirect('panel/empleados');
             }
         }
-    
         return $this->redirect('panel/empleados');
+    }
+
+
+    public function actionComprar($id, $cliente)
+    {
+        $model = new PaquetesClientes();
+        $model->id_paquetes_servicios = $id;
+        $model->id_cliente = $cliente;
+        if ($model->save()) {
+            Yii::$app->session->setFlash('success', 'Paquete comprado correctamente');
+            return $this->redirect(['cliente/servicios-cliente']);
+        }
+    }
+
+    public function actionTicketCliente(){
+        $ticketForm = new TicketForm();
+        $paquetes = $this->enlazarPaquetes(Yii::$app->user->identity->cliente->id);
+        $categoria = Categories::find()->all();
+        $cliente = $this->findCliente(Yii::$app->user->identity->cliente->id);
+        $tickets = Tickets::find()->where(['id_cliente' => $cliente->id])->all();
+        return $this->render('ticket', ['tickets' => $tickets , 'ticketForm' => $ticketForm,'categoria' => $categoria,'paquetes' => $paquetes]);
     }
 }

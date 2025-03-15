@@ -71,7 +71,7 @@ cerrarModal.addEventListener('click', function(){
 
 
 
-function mostrarAlerta(idUsuario, estadoActual) {
+function mostrarAlerta(idUsuario, estadoActual,nombreUsuario) {
   const swalWithBootstrapButtons = Swal.mixin({
       customClass: {
           confirmButton: "btn btn-success",
@@ -81,18 +81,17 @@ function mostrarAlerta(idUsuario, estadoActual) {
   });
   swalWithBootstrapButtons.fire({
       title: "¿Estás seguro?",
-      text: "El operador está actualmente " + estadoActual + ",¿Desea " + (estadoActual === "Activo" ? "bloquear" : "activar") + " ?",
+      text: " Está actualmente " + estadoActual + ",¿Desea " + (estadoActual === "Activo" ? "suspender" : "activar") + " ?",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonText: "Sí, "+ (estadoActual === "Activo" ? "bloquear" : "activar") + "!",
+      confirmButtonText: "Sí, "+ (estadoActual === "Activo" ? "suspender" : "activar") + "!",
       cancelButtonText: "No, cancelar",
       reverseButtons: true
   }).then((result) => {
       if (result.isConfirmed) {
           let nuevoEstado = estadoActual === "Activo" ? 0 : 1; 
-          console.log(nuevoEstado);
           $.ajax({
-              url: 'index.php?r=cliente/update-estatus&id=' + idUsuario, 
+              url: 'index.php?r='+(nombreUsuario == 'paquete'? 'paquete':'cliente')+ '/update-estatus&id=' + idUsuario, 
               type: 'POST',
               data: {
                 estado: nuevoEstado
@@ -118,5 +117,50 @@ function mostrarAlerta(idUsuario, estadoActual) {
               },
           });
       }
+  });
+}
+
+
+function mostrarCompra(idPaquete,idCliente) {
+  const swalWithBootstrapButtons = Swal.mixin({
+      customClass: {
+          confirmButton: "btn btn-success",
+          cancelButton: "btn btn-danger m-2"
+      },
+      buttonsStyling: false
+  });
+  swalWithBootstrapButtons.fire({
+      title: "¿Estás seguro de comprar este paquete buenisimo?",
+      text: " Está actualmente comprado el paquete?",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: "Sí, comprar Ya!",
+      cancelButtonText: "No, cancelar",
+      reverseButtons: true
+  }).then((result) => {
+      if (result.isConfirmed) {
+          $.ajax({
+            url: 'index.php?r=cliente/comprar&id=' + idPaquete + '&cliente=' + idCliente,
+            type: 'GET',
+            dataType: 'json',
+            cache: false,
+            success: function(response) {
+              if (response.status === "success") {
+                Swal.fire({
+                  title: "¡Compra realizada!",
+                  text: response.message,
+                  icon: "success"
+                }).then(() => {
+                  location.reload();
+                });
+              } else {
+                Swal.fire({
+                  title: "Error",
+                  text: response.message || "No se pudo realizar la compra",
+                  icon: "error"
+                });
+              }
+            },
+          });    }
   });
 }

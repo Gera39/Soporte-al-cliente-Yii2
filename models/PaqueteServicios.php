@@ -35,7 +35,7 @@ class PaqueteServicios extends \yii\db\ActiveRecord
             [['paquete_id', 'servicio_id'], 'required'],
             [['paquete_id', 'servicio_id'], 'integer'],
             [['paquete_id', 'servicio_id'], 'unique', 'targetAttribute' => ['paquete_id', 'servicio_id']],
-            [['paquete_id'], 'exist', 'skipOnError' => true, 'targetClass' => Packages::class, 'targetAttribute' => ['paquete_id' => 'id']],
+            [['paquete_id'], 'exist', 'skipOnError' => true, 'targetClass' => Paquete::class, 'targetAttribute' => ['paquete_id' => 'id']],
             [['servicio_id'], 'exist', 'skipOnError' => true, 'targetClass' => Services::class, 'targetAttribute' => ['servicio_id' => 'id']],
         ];
     }
@@ -59,7 +59,7 @@ class PaqueteServicios extends \yii\db\ActiveRecord
      */
     public function getPaquete()
     {
-        return $this->hasOne(Packages::class, ['id' => 'paquete_id']);
+        return $this->hasOne(Paquete::class, ['id' => 'paquete_id']);
     }
 
     /**

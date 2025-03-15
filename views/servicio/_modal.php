@@ -7,7 +7,7 @@ use yii\widgets\ActiveForm;
     <div class="modal-dialog  modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title text-dark" id="myModalLabel">Agregar Servicio <i class="bx bx-plus"></i></h5>
+                <h5 class="modal-title text-dark" id="myModalLabel<?=$id?>"><?=(($direccion === 'update')?'Editar':'Agregar')?> Servicio <i class="bx bx-plus"></i></h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
             </div>
 

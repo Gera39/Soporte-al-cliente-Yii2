@@ -16,7 +16,6 @@ use app\models\User;
 class LoginController extends Controller{
 
     public function actionIndex(){
-        
         $model = new LoginForm();
         $modelCreate = new RegisterForm();
         $this->layout = 'login/login';
@@ -44,6 +43,12 @@ class LoginController extends Controller{
             return $this->redirect(['index', 'mensaje' =>'error']);
          
         }
+    }
+
+    public function actionLogout()
+    {
+        Yii::$app->user->logout();
+        return $this->redirect(['index']);
     }
 
     public function actionRegisterCliente(){

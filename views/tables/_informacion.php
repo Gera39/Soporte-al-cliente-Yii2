@@ -10,7 +10,7 @@ echo DetailView::widget([
                 $usuario = $model->getUsuario()->one();
                 $estadoTexto = ($usuario && $usuario->estado == '1') ? 'Activo' : 'Bloqueado';
                 $clase = ($usuario && $usuario->estado == '1') ? 'btn-success' : 'btn-danger';
-                return "<span class='btn $clase btn-block' onclick='mostrarAlerta({$usuario->id},\"$estadoTexto\")' style='padding: 5px; display: block; cursor:default;'>$estadoTexto</span>";
+                return "<span class='btn $clase btn-block' onclick='mostrarAlerta({$usuario->id},\"$estadoTexto\",\"cliente\")' style='padding: 5px; display: block; cursor:default;'>$estadoTexto</span>";
             },
         ],
         [

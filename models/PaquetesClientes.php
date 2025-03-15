@@ -34,7 +34,7 @@ class PaquetesClientes extends \yii\db\ActiveRecord
         return [
             [['id_paquetes_servicios', 'id_cliente'], 'required'],
             [['id_paquetes_servicios', 'id_cliente'], 'integer'],
-            [['id_paquetes_servicios'], 'exist', 'skipOnError' => true, 'targetClass' => Packages::class, 'targetAttribute' => ['id_paquetes_servicios' => 'id']],
+            [['id_paquetes_servicios'], 'exist', 'skipOnError' => true, 'targetClass' => Paquete::class, 'targetAttribute' => ['id_paquetes_servicios' => 'id']],
             [['id_cliente'], 'exist', 'skipOnError' => true, 'targetClass' => Cliente::class, 'targetAttribute' => ['id_cliente' => 'id']],
         ];
     }
@@ -68,7 +68,7 @@ class PaquetesClientes extends \yii\db\ActiveRecord
      */
     public function getPaquetesServicios()
     {
-        return $this->hasOne(Packages::class, ['id' => 'id_paquetes_servicios']);
+        return $this->hasOne(Paquete::class, ['id' => 'id_paquetes_servicios']);
     }
 
 }
