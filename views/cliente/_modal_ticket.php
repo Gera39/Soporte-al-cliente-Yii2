@@ -54,9 +54,9 @@ use yii\helpers\ArrayHelper;
                                     Html::radio($name, $checked, [
                                         'value' => $value,
                                         'class' => 'form-check-input',
-                                        'id' => 'prioridad-' . $index,
+                                        'id' => 'prioridad-'.$index,
                                     ]) .
-                                    Html::label($label, 'prioridad-' . $index, ['class' => 'form-check-label', 'style' => "font-size:20px;"]) .
+                                    Html::label($label, 'prioridad-'.$index, ['class' => 'form-check-label', 'style' => "font-size:20px;"]) .
                                     '</div>';
                             },
                             'class' => 'form-control',
@@ -85,10 +85,11 @@ use yii\helpers\ArrayHelper;
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label text-dark" style="font-size:24px;">Adjuntar Archivo (no obligatorio)</label>
                         <?= $form->field($ticketForm, 'nombre_archivo')->fileInput([
                             'id' => 'ticket-archivo',
-                        ])->label(false)?>
+                        ])->label('Adjuntar Archivo (no obligatorio)',[
+                            'style' => 'text-font:20px;',
+                        ])?>
                 </div>
 
             </div>

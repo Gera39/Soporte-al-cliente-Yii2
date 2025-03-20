@@ -42,7 +42,7 @@ class TicketController extends Controller
             ':id_cliente' => Yii::$app->user->identity->cliente->id,
             ':descripcion' => $datos['descripcion'] ?? '',
             ':prioridad' => $datos['prioridad'] ?? '',
-            ':nombre_archivo' => $nombreArchivo,
+            ':nombre_archivo' => $nombreArchivo ?? '',
         ])->queryAll();
         if (!empty($resultado) && $resultado[0]['resultado'] == 200) {
             Yii::$app->session->setFlash('success', 'Ticket levantado con éxito.');
@@ -63,5 +63,14 @@ class TicketController extends Controller
             return $this->redirect(['cliente/ticket-cliente']);
         }
         return $this->render('view', ['model' => $ticket]);
+    }
+
+    public function actionCancelar($id){
+        $model =Tickets::findOne($id);
+        $model->estado_ticket = 'Resuelto';
+        if($model->save()){
+            Yii::$app->session->setFlash('success', 'Ticket cancelado correctamente.');
+            return $this->redirect(['cliente/ticket-cliente']);
+        }
     }
 }

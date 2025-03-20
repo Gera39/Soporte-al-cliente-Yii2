@@ -6,19 +6,8 @@ use yii\helpers\Url;
 
 <main>
     <div class="head-title">
-        <div class="left">
+        <div class="left mb-5">
             <h1>Paquetes</h1>
-            <ul class="breadcrumb">
-                <li>
-                    <?= Html::a('Administrador', ['panel/dashboard-admin'], ['class' => 'active']); ?>
-                </li>
-                <li>
-                    <i class='bx bx-chevron-right'></i>
-                </li>
-                <li>
-                    <a href="#">Paquetes</a>
-                </li>
-            </ul>
         </div>
         <?= Html::a('Ver servicios', ['servicio/servicios'], ['class' => 'btn btn-primary']) ?>
     </div>
@@ -34,7 +23,7 @@ use yii\helpers\Url;
                 </button>
                 <button type="button" class="btn btn-success filtro-btn-paquete" data-estado="activo">
                     Activos
-                    <span class="badge bg-yellow-500"><?=count(array_filter($paquetes,function($paquete){return $paquete->estado === 'activo';}))?></span>
+                    <span class="badge bg-green-500"><?=count(array_filter($paquetes,function($paquete){return $paquete->estado === 'activo';}))?></span>
                 </button>
                 </div>
                 <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModalPaquete">Crear nuevo paquete</a>
@@ -43,7 +32,7 @@ use yii\helpers\Url;
             $ids = \yii\helpers\ArrayHelper::map($servicios, 'id', 'nombre_service');
             ?>
             <div id="paquetes-container">
-                <?= $this->render('_paquetes', ['paquetes' => array_filter($paquetes, function($paquete) { return $paquete->estado === 'activo'; })]) ?>
+                <?= $this->render('_paquetes', ['paquetes' => array_filter($paquetes, function($paquete) { return $paquete->estado === 'activo'; }),'permiso' =>'no']) ?>
             </div>
             <?= $this->render('_modal_paquete', ['paqueteForm' => $paqueteForm, 'servicios' => $ids]); ?>
         </div>

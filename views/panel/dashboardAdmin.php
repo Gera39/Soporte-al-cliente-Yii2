@@ -1,78 +1,59 @@
+<?php
+use yii\widgets\ListView;
+use yii\data\ArrayDataProvider;
+?>
 
+<!-- MAIN -->
+<main>
+	<div class="head-title">
+		<div class="left mb-5">
+			<h1>Vista Rapida</h1>
+		</div>
 
-<main class="h-100">
-    <div class="head-title">
-        <div class="left">
-            <h1>Vista Rapida</h1>
-            <ul class="breadcrumb">
-                <li>
-                    <a href="#">Adminitrador</a>
-                </li>
-                <li><i class='bx bx-chevron-right'></i></li>
-                <li>
-                    <a class="active" href="#">Vista Rapida</a>
-                </li>
-            </ul>
-        </div>
+	</div>
 
-    </div>
-    <ul class="box-info">
-        <li>
-            <i class='bx bxs-calendar-check'></i>
-            <span class="text">
-                <h3>100</h3>
-                <p>Clientes</p>
-            </span>
-        </li>
-        <li>
-            <i class='bx bxs-group'></i>
-            <span class="text">
-                <h3>100</h3>
-                <p>Empleados</p>
-            </span>
-        </li>
-        <li>
-            <i class='bx bxs-dollar-circle'></i>
-            <span class="text">
-                <h3>$999</h3>
-                <p>Total de Servicios Contratados</p>
-            </span>
-        </li>
-    </ul>
-    <ul class="box-info">
-        <li>
-            <i class='bx bx-wifi'></i>
-            <span class="text">
-                <h3>500</h3>
-                <p>Internet Ganancias</p>
-            </span>
-        </li>
-        <li>
-            <i class='bx bx-wifi'></i>
-            <span class="text">
-                <h3>7878</h3>
-                <p>Cantidad Contratados</p>
-            </span>
-        </li>
+	<!-- <ul class="box-info">
+		<li>
+			<i class='bx bxs-calendar-check'></i>
+			<span class="text">
+				<h3>78</h3>
+				<p>Tickets Abiertos</p>
+			</span>
+		</li>
+	</ul> -->
 
-    </ul>
-    <ul class="box-info">
-        <li>
-            <i class='bx bx-phone-call'></i>
-            <span class="text">
-                <h3>889</h3>
-                <p>Telefonia Ganancias</p>
-            </span>
-        </li>
-        <li>
-            <i class='bx bx-phone-call'></i>
-            <span class="text">
-                <h3>100</h3>
-                <p>Cantidad contratados</p>
-            </span>
-        </li>
+	<div class="table-data">
+		<div class="todo">
+			<div class="head">
+				<h3>Recientes</h3>
+			</div>
+            <?php
 
-    </ul>
+            $dataProvider = new ArrayDataProvider([
+                'allModels' => $logs,
+                'pagination' => [
+                    'pageSize' => 10,
+                ],
+            ]);
 
+            echo ListView::widget([
+                'dataProvider' => $dataProvider,
+                'summary' => false,
+                'itemView' => function ($model, $key, $index, $widget) {
+                    return '<li class="completed">
+                                <p><span style="font-weight:bold; font-size:1.2em;">' . $model['nombre'] . '</span><br>' . $model['accion'] . '<br>' . date('Y/m/d', strtotime($model['fecha_evento'])) . '</p>
+                            </li>';
+                },
+                'options' => [
+                    'tag' => 'ul',
+                    'class' => 'todo-list',
+                ],
+                'itemOptions' => [
+                    'tag' => false,
+                ],
+            ]);
+            ?>
+		</div>
+	</div>
 
 </main>

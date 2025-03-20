@@ -11,18 +11,8 @@ $this->title = "Servicio " . $model->nombre_service;
 <main>
 
     <div class="head-title">
-        <div class="left">
+        <div class="left mb-5">
             <h1><?= Html::encode($this->title) ?></h1>
-            <ul class="breadcrumb">
-                <li>
-                    <a href="#">Administrador</a>
-                </li>
-                <li><i class='bx bx-chevron-right'></i></li>
-                <li>
-                    <a class="active" href="#">Servicios</a>
-                </li>
-                
-            </ul>
         </div>
     </div>
 

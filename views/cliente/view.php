@@ -11,17 +11,8 @@ $this->title = "Cliente: " . $nombre;
 <main>
 
     <div class="head-title">
-        <div class="left">
+        <div class="left mb-5">
             <h1><?= Html::encode($this->title) ?></h1>
-            <ul class="breadcrumb">
-                <li>
-                    <a href="#">Administrador</a>
-                </li>
-                <li><i class='bx bx-chevron-right'></i></li>
-                <li>
-                    <a class="active" href="#">Clientes</a>
-                </li>
-            </ul>
         </div>
     </div>
 
@@ -29,13 +20,7 @@ $this->title = "Cliente: " . $nombre;
         <div class="order">
             <p>
                 <?= Html::a('Actualizar', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-                <?= Html::a('Borrar', ['delete', 'id' => $model->id], [
-                    'class' => 'btn btn-danger',
-                    'data' => [
-                        'confirm' => 'Apoco si ?',
-                        'method' => 'post',
-                    ],
-                ]) ?>
+              
 
             </p>
 

@@ -48,7 +48,7 @@ class MensajesTicket extends \yii\db\ActiveRecord
             [['tipo_remitente', 'mensaje'], 'string'],
             [['fecha_envio'], 'safe'],
             ['tipo_remitente', 'in', 'range' => array_keys(self::optsTipoRemitente())],
-            [['id_remitente'], 'exist', 'skipOnError' => true, 'targetClass' => Users::class, 'targetAttribute' => ['id_remitente' => 'id']],
+            [['id_remitente'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['id_remitente' => 'id']],
             [['id_ticket'], 'exist', 'skipOnError' => true, 'targetClass' => Tickets::class, 'targetAttribute' => ['id_ticket' => 'id']],
         ];
     }
@@ -76,7 +76,7 @@ class MensajesTicket extends \yii\db\ActiveRecord
      */
     public function getRemitente()
     {
-        return $this->hasOne(Users::class, ['id' => 'id_remitente']);
+        return $this->hasOne(User::class, ['id' => 'id_remitente']);
     }
 
     /**

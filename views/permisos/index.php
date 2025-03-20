@@ -5,7 +5,7 @@ use yii\helpers\Url;
 
 /** @var yii\web\View $this */
 /** @var app\models\Seccion $model */
-$this->title = "Ticket ID: #".$model->id; 
+$this->title = "Manejo de Permisos";
 ?>
 <main>
 
@@ -18,12 +18,12 @@ $this->title = "Ticket ID: #".$model->id;
 
     <div class="table-data">
         <div class="order">
-           
 
-            <div class="head">
-                <h2><?= Html::encode('Informacion del ticket') ?></h2>
+            <div class="head d-flex justify-content-around">
+                <h2><?= Html::encode('Tabla de Usuarios') ?></h2>
+                <?= Html::a('Secciones',['permisos/secciones'],['class' => 'btn btn-primary'])?>
             </div>
-            <?= $this->render('_informacion',['model' => $model]);?>
+            <?= $this->render('_tabla_permisos',['usuarios' => $usuarios]);?>
         </div>
     </div>
 </main>

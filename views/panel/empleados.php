@@ -195,8 +195,7 @@ if(Yii::$app->session->hasFlash('error')){
 						'format' => 'raw',
 						'value' => function ($model) {
 							return Html::a('<i class="bx bx-user"></i>', ['operador/view', 'id' => $model['id']], ['class' => 'btn btn-sm btn-primary '])
-								. Html::a('<i class="bx bx-edit"></i>', ['operador/update', 'id' => $model['id']], ['class' => 'btn btn-sm btn-warning'])
-								. Html::a('<i class="bx bx-trash"></i>', ['operador/delete', 'id' => $model['id']], ['class' => 'btn btn-sm btn-danger']);
+								. Html::a('<i class="bx bx-edit"></i>', ['operador/update', 'id' => $model['id']], ['class' => 'btn btn-sm btn-warning']);
 						}
 					]
 				],

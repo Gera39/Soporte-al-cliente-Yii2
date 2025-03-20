@@ -105,6 +105,26 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     public function getCliente()
     {
         return $this->hasOne(Cliente::class, ['usuario_id' => 'id']);
+    } 
+
+    public function getSeccionesAcciones(){
+        return $this->hasMany(SeccionesAcciones::class,['id_usuario' => 'id']);
+    }
+
+    public function getSecciones()
+    {
+        return $this->hasMany(Secciones::class, ['id' => 'id_secciones'])
+            ->via('seccionesAcciones')
+            ->with('acciones'); // Carga las acciones relacionadas
+    }
+
+    /**
+     * Acciones asignadas al usuario (a través de la tabla pivote).
+     */
+    public function getAcciones()
+    {
+        return $this->hasMany(Acciones::class, ['id' => 'id_accion'])
+        ->viaTable('secciones_acciones', ['id_usuario' => 'id']);
     }
 
     /**

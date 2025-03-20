@@ -12,6 +12,7 @@ use app\models\Categories;
 use app\models\PaquetesClientes;
 use app\models\TicketForm;
 use yii\web\NotFoundHttpException;
+use app\models\MensajesTicket;
 
 class ClienteController extends Controller
 {
@@ -28,7 +29,7 @@ class ClienteController extends Controller
         ]);
     }
 
-   
+
     public function actionPaquetesComprados()
     {
         $cliente = $this->findCliente(Yii::$app->user->identity->cliente->id);
@@ -38,7 +39,8 @@ class ClienteController extends Controller
         $paquetes = $this->enlazarPaquetes($cliente->id);
         return $this->renderPartial('/servicio/_paquetes', ['paquetes' => $paquetes, 'permiso' => 'no']);
     }
-    public function paquetesComprado($id){
+    public function paquetesComprado($id)
+    {
         // Obtener los IDs de los paquetes comprados por el cliente
         $paquetesComprados = (new \yii\db\Query())
             ->select('id_paquetes_servicios')
@@ -48,18 +50,19 @@ class ClienteController extends Controller
         return $paquetesComprados;
     }
 
-    public function enlazarPaquetes(){
+    public function enlazarPaquetes()
+    {
         $paquetesComprados = $this->paquetesComprado(Yii::$app->user->identity->cliente->id);
         $paquetes = Paquete::find()
-        ->where(['id' => $paquetesComprados])
-        ->andWhere(['estado' => 'activo'])
-        ->all();
+            ->where(['id' => $paquetesComprados])
+            ->andWhere(['estado' => 'activo'])
+            ->all();
         return $paquetes;
     }
 
 
     public function actionServiciosCliente()
-    {   
+    {
         $cliente = $this->findCliente(Yii::$app->user->identity->cliente->id);
         if (!$cliente) {
             throw new \yii\web\NotFoundHttpException('Cliente no encontrado.');
@@ -77,7 +80,7 @@ class ClienteController extends Controller
             Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
             return $this->renderPartial('/servicio/_paquetes', ['paquetes' => $paquetes, 'permiso' => $permiso]);
         }
-        return $this->render('servicio', ['paquetes' => $paquetes , 'permiso' => $permiso]);
+        return $this->render('servicio', ['paquetes' => $paquetes, 'permiso' => $permiso]);
     }
     public function actionUpdate($id)
     {
@@ -110,6 +113,7 @@ class ClienteController extends Controller
 
     public function actionUpdateEstatus($id = null)
     {
+        
         $model = $this->findModel($id);
         if (!$model) {
             Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
@@ -133,7 +137,7 @@ class ClienteController extends Controller
             }
             // Si la solicitud es normal (formulario), procesar y redirigir
             if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect('panel/empleados');
+                return $this->redirect(['cliente/index']);
             }
         }
         return $this->redirect('panel/empleados');
@@ -151,12 +155,23 @@ class ClienteController extends Controller
         }
     }
 
-    public function actionTicketCliente(){
+    public function actionTicketCliente()
+    {
         $ticketForm = new TicketForm();
         $paquetes = $this->enlazarPaquetes(Yii::$app->user->identity->cliente->id);
         $categoria = Categories::find()->all();
         $cliente = $this->findCliente(Yii::$app->user->identity->cliente->id);
         $tickets = Tickets::find()->where(['id_cliente' => $cliente->id])->all();
-        return $this->render('ticket', ['tickets' => $tickets , 'ticketForm' => $ticketForm,'categoria' => $categoria,'paquetes' => $paquetes]);
+        return $this->render('ticket', ['tickets' => $tickets, 'ticketForm' => $ticketForm, 'categoria' => $categoria, 'paquetes' => $paquetes]);
+    }
+
+    public function actionChatCliente($id,$rol)
+    {
+            return $this->redirect(['chat/mostrar-chat', 'id' => $id,'rol' => $rol]);
+    }
+
+    public function actionIndex(){
+        $clientes = Cliente::find()->orderBy(['id' => SORT_DESC])->all(); 
+        return $this->render('index', ['clientes' => $clientes]);
     }
 }

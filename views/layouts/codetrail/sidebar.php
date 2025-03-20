@@ -22,6 +22,11 @@ use yii\widgets\Pjax;
                 </li>
                 <li>
                 <?= Html::a(
+                    '<i class="bx bx-user"></i> Clientes',
+                    ['panel/clientes']) ?>    
+                </li>
+                <li>
+                <?= Html::a(
                     '<i class="bx bxs-widget"></i> Paquetes',
                     ['panel/servicios']) ?>   
                 </li>
@@ -37,11 +42,6 @@ use yii\widgets\Pjax;
                 </li>
                 <li>
                 <?= Html::a(
-                    '<i class="bx bx-stats"></i> Graficas',
-                    ['panel/graficas']) ?>   
-                </li>
-                <li>
-                <?= Html::a(
                     '<i class="bx bx-stats"></i> Tickets',
                     ['panel/tickets-empleado']) ?>
                 </li>
@@ -52,8 +52,8 @@ use yii\widgets\Pjax;
                 </li>
                 <li>
                 <?= Html::a(
-                    '<i class="bx bx-conversation"></i> Chat',
-                    ['panel/chat']) ?>
+                    '<i class="bx bxs-key"></i> Manejo de Permisos',
+                    ['permisos/index']) ?>
                 </li>
             </ul>
             <ul class="side-menu">
@@ -67,8 +67,6 @@ use yii\widgets\Pjax;
                     '<i class="bx bxs-log-out-circle"></i> Logout',
                     ['login/logout']) ?>
                 </li>
-               
-               
             </ul>
         </section>
 

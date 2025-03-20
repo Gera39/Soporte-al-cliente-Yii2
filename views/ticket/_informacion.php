@@ -7,6 +7,7 @@ use yii\helpers\Html;
 echo DetailView::widget([
     'model' => $model,
     'attributes' => [
+
         [
             'label' => 'Categoria',
             'value' => $model->getCategoria()->one()->name,
@@ -35,11 +36,11 @@ echo DetailView::widget([
             'format' => 'raw',
             'value' => function ($model) {
                 $url = Yii::getAlias('@web/uploads/');
-                $nombreArchivo = $model->getArchivosAdjuntos()->one()->nombre_archivo;
+                $nombreArchivo = ($model->getArchivosAdjuntos()->one()) ? $model->getArchivosAdjuntos()->one()->nombre_archivo : null;
                 if (isset($nombreArchivo)) {
                     return Html::a(
                         Html::img($url.$nombreArchivo, [
-                            'width' => '300px',
+                            'style' => 'width:100px;',
                             'onerror' => "this.onerror=null;this.outerHTML='<a href=\"$url$nombreArchivo\" target=\"_blank\">Ver archivo adjunto</a>';"
                         ]),
                         $url.$nombreArchivo,

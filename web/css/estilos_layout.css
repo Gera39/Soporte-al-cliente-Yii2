@@ -618,6 +618,35 @@ body {
 	justify-content: space-around;
 }
 
+#mensajes{
+	display: flex;
+	padding: 20px;
+	border-radius: 13px;
+	background-color: #0C0C1E;
+    flex-direction: column;
+}
+
+
+.chat {
+    max-width: 70%;
+    padding: 10px 15px;
+    border-radius: 10px;
+    font-size: 14px;
+    word-wrap: break-word;
+}
+
+/* Mensajes propios (enviados) */
+.chat.own {
+    align-self: flex-end;
+    border-top-right-radius: 0;
+}
+
+/* Mensajes recibidos */
+.chat.received {
+    align-self: flex-start;
+    border-top-left-radius: 0;
+}
+
 @media screen and (max-width: 768px) {
 	#sidebar {
 		width: 200px;

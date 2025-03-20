@@ -1,19 +1,23 @@
 <?php
+
+use yii\helpers\Url;
 use yii\grid\GridView;
 use yii\data\ArrayDataProvider;
 use yii\helpers\Html;
+
 $dataProvider = new ArrayDataProvider([
     'allModels' => $tickets,
     'pagination' => ['pageSize' => false],
 ]);
 echo GridView::widget([
+    'summary' => '',
     'dataProvider' => $dataProvider,
     'columns' => [
         [
             'label' => 'Prioridad',
             'format' => 'raw',
             'contentOptions' => function ($model) {
-                $prioridad = $model->prioridad; 
+                $prioridad = $model->prioridad;
                 if ($prioridad == 'Alta') {
                     return ['style' => 'text-align: center; background-color: rgb(255, 99, 71); color: white;'];
                 } elseif ($prioridad == 'Media') {
@@ -25,7 +29,7 @@ echo GridView::widget([
                 }
             },
             'value' => function ($model) {
-                return $model->prioridad; 
+                return $model->prioridad;
             }
         ],
         [
@@ -49,7 +53,7 @@ echo GridView::widget([
             'label' => 'Estado Ticket',
             'format' => 'raw',
             'contentOptions' => function ($model) {
-                $estado = $model->estado_ticket; 
+                $estado = $model->estado_ticket;
                 if ($estado == 'En proceso') {
                     return ['style' => 'text-align: center; color:white; background-color: rgb(224, 160, 12);'];
                 } elseif ($estado == 'Resuelto') {
@@ -61,7 +65,7 @@ echo GridView::widget([
                 }
             },
             'value' => function ($model) {
-                return $model->estado_ticket; 
+                return $model->estado_ticket;
             }
         ],
         [
@@ -77,19 +81,73 @@ echo GridView::widget([
             'format' => 'raw',
             'contentOptions' => ['style' => 'text-align: center;'],
             'value' => function ($model) {
-                return Html::a('Ver Ticket', ['ticket/view', 'id' => $model->id], ['class' => 'btn btn-primary']).
-                       Html::a('<i class="bx bx-pencil"></i>', ['ticket/view', 'id' => $model->id], ['class' => 'm-1 btn btn-success']);
+                $buttons = Html::a('Ver', ['ticket/view', 'id' => $model->id], ['class' => 'btn btn-primary']);
+                
+                if (Yii::$app->user->identity->role == 'cliente' || Yii::$app->user->identity->role == 'operador') {
+                    $buttons .= Html::a('<i class="bx bx-pencil"></i>', '#', [
+                        'class' => 'btn btn-success m-2 btn-editar-paquete',
+                        'data-bs-toggle' => 'modal',
+                        'data-bs-target' => '#myModalTicketCliente',
+                        'data-id_categoria' => $model->id_categoria,
+                        'data-prioridad' => $model->prioridad,
+                        'data-descripcion' => $model->descripcion,
+                        'data-id_paquete' => $model->id_package,
+                    ]);
+                    if ($model->estado_ticket !== 'Resuelto') {
+                        $buttons .= Html::a('Cerrar', ['ticket/cerrar', 'id' => $model->id], ['class' => 'btn btn-danger m-2']);
+                    }
+                }
+
+
+                return $buttons;
             }
         ],
         [
             'label' => 'Chat',
             'format' => 'raw',
+            'visible' => Yii::$app->user->identity->role == 'cliente' || Yii::$app->user->identity->role == 'operador',
             'contentOptions' => ['style' => 'text-align: center;'],
             'value' => function ($model) {
-                return Html::a('<i class="bx bx-conversation" > </i>', ['cliente/chat', 'id' => $model->id], ['class' => 'btn btn-primary']);
+                $user = Yii::$app->user->identity;
+                $idUser = $user->id;
+                $rol =$user->role;
+                return Html::a('<i class="bx bx-conversation" > </i>', ['chat/mostrar-chat', 'id' => $model->id,'rol' => $rol,'idUser' => $idUser], ['class' => 'btn btn-primary']);
             }
         ]
-        
+
     ],
 ]);
+?>
+
+
+<?php
+$url = Url::to(['ticket/update-ticket']);
+
+$script = <<<JS
+    $('#myModalTicketCliente').on('show.bs.modal', function(event){
+    let button = $(event.relatedTarget); // Botón que abrió el modal
+    let modal = $(this);
+
+    let id = button.data('id_categoria');
+    if(id){
+        modal.find('.modal-title').text('Actualizar Ticket JAJAJAAJ');
+        modal.find('input[name="TicketForm[id_categoria]"][value="' + button.data('id_categoria') + '"]').prop('checked', true);
+        modal.find('input[name="TicketForm[prioridad]"][value="' + button.data('prioridad') + '"]').prop('checked', true);
+        modal.find('#ticketform-descripcion').val(button.data('descripcion'));
+        modal.find('#ticketform-id_paquete').val(button.data('id_paquete'));
+        modal.find('#ticket-archivo').closest('.form-group').hide();                 
+        modal.find('form').attr('action', '$url?id=' + id);// Asignar acción al formulario dentro del modal
+    } else {
+        modal.find('.modal-title').text('Crear Nuevo Ticket');
+        modal.find('input[name="TicketForm[id_categoria]"]').prop('checked', false);
+        modal.find('input[name="TicketForm[prioridad]"]').prop('checked', false);
+        modal.find('#ticketform-descripcion').val('');
+        modal.find('#ticketform-id_paquete').val('');
+        modal.find('#ticket-archivo').closest('.form-group').show();
+    }
+});
+
+
+JS;
+$this->registerJs($script);
 ?>
