@@ -647,6 +647,46 @@ body {
     border-top-left-radius: 0;
 }
 
+.star-rating-container {
+    text-align: center;
+    margin: 15px 0;
+}
+
+.star-rating {
+    font-size: 2rem;
+    cursor: pointer;
+    margin-bottom: 5px;
+}
+
+.star-rating i {
+    color: #ffd700;
+    transition: all 0.2s ease;
+    padding: 0 2px;
+}
+
+.star-rating i.fas {
+    color: #ffc107;
+}
+
+.star-rating:hover i {
+    transform: scale(1.1);
+}
+
+.badge-notification {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background-color: #ff4757; /* Rojo llamativo */
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
 @media screen and (max-width: 768px) {
 	#sidebar {
 		width: 200px;

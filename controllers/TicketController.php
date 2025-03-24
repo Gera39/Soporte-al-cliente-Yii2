@@ -2,10 +2,10 @@
 
 namespace app\controllers;
 
+use app\models\EvaluacionesServicio;
 use Yii;
 use yii\web\Controller;
 use app\models\Tickets;
-use app\models\Operador;
 use yii\web\UploadedFile;
 
 class TicketController extends Controller
@@ -15,17 +15,17 @@ class TicketController extends Controller
     {
         $datos = Yii::$app->request->post('TicketForm', []);
 
-            if (empty($datos)) {
-                Yii::$app->session->setFlash('error', 'No se recibieron datos.');
-                return $this->redirect(['cliente/ticket-cliente']);
-            }
+        if (empty($datos)) {
+            Yii::$app->session->setFlash('error', 'No se recibieron datos.');
+            return $this->redirect(['cliente/ticket-cliente']);
+        }
         $archivo = UploadedFile::getInstanceByName('TicketForm[nombre_archivo]');
         $directorioUploads = Yii::getAlias('@webroot/uploads');
         if ($archivo) {
-           
-            $rutaArchivo = $directorioUploads . '/'. $archivo->baseName . '.' . $archivo->extension;
+
+            $rutaArchivo = $directorioUploads . '/' . $archivo->baseName . '.' . $archivo->extension;
             if ($archivo->saveAs($rutaArchivo)) {
-                $nombreArchivo =$archivo->name;
+                $nombreArchivo = $archivo->name;
             } else {
                 Yii::$app->session->setFlash('error', 'No se pudo subir el archivo.');
                 return $this->redirect(['cliente/ticket-cliente']);
@@ -65,12 +65,56 @@ class TicketController extends Controller
         return $this->render('view', ['model' => $ticket]);
     }
 
-    public function actionCancelar($id){
-        $model =Tickets::findOne($id);
+    public function actionCerrar($id)
+    {
+        $model = Tickets::findOne($id);
         $model->estado_ticket = 'Resuelto';
-        if($model->save()){
-            Yii::$app->session->setFlash('success', 'Ticket cancelado correctamente.');
+        if ($model->save()) {
+            if (Yii::$app->request->isAjax) {
+                Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+                return ['success' => true, 'redirect' => Yii::$app->urlManager->createUrl(['cliente/ticket-cliente'])];
+            }
+            Yii::$app->session->setFlash('success', 'Ticket cerrado correctamente.');
             return $this->redirect(['cliente/ticket-cliente']);
         }
+    }
+
+    public function actionCalificar($id, $calificacion)
+    {
+        $model = Tickets::findOne($id);
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $evaluacion = new EvaluacionesServicio();
+            $evaluacion->calificacion = $calificacion;
+            $evaluacion->id_ticket = $id;
+            $evaluacion->id_cliente = $model->id_cliente;
+            $evaluacion->id_operador = $model->id_operador;
+            $model->estado_ticket = 'En proceso';
+            if($evaluacion->save() && $model->save()){
+                return ['success' => true, 'message' => 'Calificación guardada correctamente.'];
+            } else {
+                Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+                return ['success' => false, 'message' => 'No se pudo guardar la calificación.'];
+            }
+    }
+
+    public function actionTerminarTicket(){
+        if (Yii::$app->request->isGet) {
+            $id = Yii::$app->request->get('id');
+            $descripcion = Yii::$app->request->get('descripcion');
+    
+            $ticket = Tickets::findOne($id);
+            $ticket->estado_ticket = 'Resuelto';
+            $ticket->comentario_resolucion = $descripcion;
+
+
+            if ($ticket->save()) {
+                Yii::$app->session->setFlash('success', '¡Ticket levantado con éxito!');
+                return $this->redirect(['operador/ticket']);
+            } else {
+                Yii::$app->session->setFlash('error', 'Error al levantar el ticket.');
+            }
+        }
+    
+        return $this->redirect(['ticket/index']);
     }
 }

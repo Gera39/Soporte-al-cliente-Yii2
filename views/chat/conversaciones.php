@@ -12,7 +12,12 @@ use yii\helpers\Html;
         </li>
         <?php foreach ($tickets as $t): ?>
             <li>
-                <?= Html::a('Ticket #' . $t->id . ':' . $t->categoria->name,['chat/mostrar-chat', 'id' => $t->id],
+                <?php
+                $user = Yii::$app->user->identity;
+                $idUser = $user->id;
+                $rol =$user->role;
+                ?>
+                <?= Html::a('Ticket #' . $t->id . ':' . $t->categoria->name,['chat/mostrar-chat', 'id' => $t->id,'rol' => $rol,'idUser' => $idUser],
                 ['class' => 'btn text-center btn-success w-100 mb-3']);?>
             </li>
         <?php endforeach; ?>

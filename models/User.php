@@ -127,6 +127,25 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         ->viaTable('secciones_acciones', ['id_usuario' => 'id']);
     }
 
+    public static function getSeccionesPermitidas($id){
+        $seccionesPermitidas = [];
+        $secciones = SeccionesAcciones::find()->where(['id_usuario' => $id])->all();
+        foreach ($secciones as $seccion) {
+            if (!in_array($seccion->id_secciones, $seccionesPermitidas)) {
+            $seccionesPermitidas[] = $seccion->id_secciones;
+            }
+        }
+        return $seccionesPermitidas;
+    }
+
+    public static function getPermitidoSeccion($seccion){
+        $seccionesPermitidas = self::getSeccionesPermitidas(Yii::$app->user->identity->id);
+        return (!in_array($seccion,$seccionesPermitidas) || self::getEstadoUsuario()) ? true: false ;
+    }
+
+    public static function getEstadoUsuario(){
+        return Yii::$app->user->identity->estado === 0 ? true: false ;
+    }
     /**
      * Gets query for [[HistorialResolucions]].
      *

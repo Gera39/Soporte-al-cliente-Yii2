@@ -1,6 +1,7 @@
 <?php
 
 use yii\data\ArrayDataProvider;
+use yii\data\Sort;
 use yii\grid\GridView;
 use yii\helpers\Html;
 use yii\helpers\Url;
@@ -9,9 +10,14 @@ $dataProvider = new ArrayDataProvider([
     'allModels' => $paquetes,
     'pagination' => ['pageSize' => false],
 ]);
+
 echo GridView::widget([
     'dataProvider' => $dataProvider,
     'summary' => false,
+    'sorter' => [
+        'attributes' => ['id'],
+        'defaultOrder' => ['id' => SORT_DESC],
+    ],
     'columns' => [
         
         [
@@ -80,13 +86,16 @@ echo GridView::widget([
             'label' => 'Compra',
             'format' => 'raw',
             'contentOptions' => ['style' => 'text-align: center;'],
-            'visible' => Yii::$app->user->identity->role === 'cliente' && $permiso === 'comprados',
+            'visible' => (Yii::$app->user->identity->role === 'cliente' || Yii::$app->user->identity->role === 'operador') && $permiso === 'comprados' ,
             'value' => function ($model) {
                 $idCliente = Yii::$app->user->identity->cliente->id;
-                return Html::a('<i class="bx bx-cart"></i>', '#', [
-                    'class' => 'btn btn-success',
-                    'onclick' => 'mostrarCompra(' . $model->id . ', ' . $idCliente. ')',
-                ]);
+                if($model->servicios != null){
+                    return Html::a('<i class="bx bx-cart"></i>', '#', [
+                        'class' => 'btn btn-success',
+                        'onclick' => 'mostrarCompra(' . $model->id . ', ' . $idCliente. ')',
+                    ]);
+                }
+                return "<span class='btn btn-danger' style='cursor:default;'><i class='bx bx-cart'></i></span>";
             }
         ],
     ],
@@ -99,7 +108,6 @@ echo GridView::widget([
             let button = $(event.relatedTarget); // Botón que abrió el modal
             let modal = $(this);
 
-            // Verificar si se pasó un ID (actualización) o no (creación)
             let id = button.data('id');
 
             if (id) {
@@ -109,7 +117,6 @@ echo GridView::widget([
                 modal.find('#paqueteform-descripcion').val(button.data('descripcion'));
                 modal.find('#paqueteform-precio').val(button.data('precio'));
                 
-                // Para los checkboxes de servicios, si envías un array en data-servicios, puedes hacer:
                 var servicios = button.data('servicios'); // Asegúrate de que venga como array o JSON.parse()
                 modal.find('input[name="PaqueteForm[servicios][]"]').each(function(){
                     var checkbox = $(this);
@@ -119,10 +126,15 @@ echo GridView::widget([
                         checkbox.prop('checked', false);
                     }
                 });
-                
-                // También puedes modificar el action del formulario si es necesario:
                 modal.find('form').attr('action', '$url&id=' + id);
-            } 
+            } else {
+                // Nuevo paquete: cambiar título y limpiar campos
+                modal.find('.modal-title').text('Nuevo paquete');
+                modal.find('#paqueteform-nombre_paquete').val('');
+                modal.find('#paqueteform-descripcion').val('');
+                modal.find('#paqueteform-precio').val('');
+                modal.find('input[name="PaqueteForm[servicios][]"]').prop('checked', false);
+            }
         });
     JS;
     $this->registerJs($script);

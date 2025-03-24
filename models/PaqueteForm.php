@@ -17,7 +17,7 @@ class PaqueteForm extends Model
         return [
             [['descripcion', 'precio', 'servicios','nombre_paquete'], 'required', 'message' => 'Este campo no debe estar vacío'],
             ['descripcion', 'string', 'max' => 200, 'message' => 'La descripción no debe superar 200 caracteres'],
-            ['precio', 'number', 'min' => 1, 'message' => 'El precio debe ser un número mayor o igual a 1'],
+            ['precio', 'number', 'min' => 1,'max' => 9999, 'message' => 'El precio debe ser un número mayor o igual a 1'],
             [
                 'servicios',
                 function ($attribute) {

@@ -1,10 +1,12 @@
 <section id="mensajes">
-    <div class="alert alert-success chat received">
-        <p>Este mensaje se genera de manera automatica le solicitamos que espere un momento en lo que se conecta el Operador a cargo </p>
-    </div>
+    <?php if ($rol === 'cliente'): ?>
+        <div class="alert alert-success chat received">
+            <p>Este mensaje se genera de manera automatica le solicitamos que espere un momento en lo que se conecta el Operador a cargo </p>
+        </div>
+    <?php endif; ?>
 
-    <?php foreach ($mensajes as $m): ?>
-        <?php if ($m->tipo_remitente === 'Cliente'): ?>
+    <?php foreach ($mensajes as $m):?>
+        <?php if ($m->tipo_remitente == ucfirst($rol)): ?>
             <div class="alert alert-primary chat own">
                  <?= $m->mensaje ?>
                 <?php
@@ -12,7 +14,7 @@
                 ?>
                 <p class='text text-<?= (($leido === 'Visto') ? 'success' : 'danger') ?>'><?= $leido ?></p>
             </div>
-        <?php elseif ($m->tipo_remitente === 'Operador'): ?>
+        <?php elseif ($m->tipo_remitente !== $rol): ?>
             <div class="alert alert-success chat received">
                 <p> <?= $m->mensaje ?></p>
             </div>

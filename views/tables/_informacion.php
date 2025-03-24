@@ -1,5 +1,6 @@
 <?php
 use yii\widgets\DetailView;
+use yii\helpers\Html;
 echo DetailView::widget([
     'model' => $model,
     'attributes' => [
@@ -46,15 +47,17 @@ echo DetailView::widget([
         ],
         [
             'label' => 'Horario',
+            'format' => 'raw',
             'value' => function ($model){
-                return $model->turno;
+                return( $model->turno) ? $model->turno : Html::a('Importante añadir turno',['operador/update','id'=>$model->usuario->id],['class'=>'btn btn-danger']);
             },
     
         ],
         [
             'label' => 'Dias',
+            'format' => 'raw',
             'value' => function ($model){
-                return $model->dias;
+                return ($model->dias) ? $model->dias :  Html::a('Importante añadir turno',['operador/update','id'=>$model->usuario->id],['class'=>'btn btn-danger']);
             },
     
         ],

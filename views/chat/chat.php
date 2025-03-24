@@ -3,14 +3,14 @@
 use yii\helpers\Html;
 
 $mensajes = $ticket->getMensajesTickets()->where(['id_ticket' => $ticket->id])->all();
-
+$rol = Yii::$app->user->identity->role;
 $titulo = 'Mensajes';
 ?>
 
 
 <main id="mainChat">
     <div class="head-title">
-        <div class="left mb-5">
+        <div class="left mb-3">
             <h1><?= $titulo ?></h1>
         </div>
     </div>
@@ -19,8 +19,19 @@ $titulo = 'Mensajes';
         <?= $this->render('conversaciones', ['tickets' => $tickets]); ?>
 
 
-            <section id="conversacion">
-                <?= $this->render('_mensajes', ['mensajes' => $mensajes]) ?>
+        <section id="conversacion" style="border:none;">
+            <?php if ($ticket->estado_ticket === 'Pendiente'): ?>
+                <div class="d-flex justify-content-around m-3">
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#myModalReporte" class="btn btn-danger " style='width:200px;'><i class='bx bx-alarm-exclamation'></i>Levantar Reporte</a>
+                    <?php if ($rol === 'cliente'): ?>
+                        <button onclick="mostrarAlertaTicket(<?= $ticket->id ?>)" class="btn btn-success">Cerrar Ticket</button>
+                    <?php endif; ?>
+                </div>
+            <?php endif; ?>
+            <?= $this->render('_mensajes', ['mensajes' => $mensajes , 'rol' => $rol]) ?>
+            <?php if ($ticket->estado_ticket === 'Resuelto' || $ticket->estado_ticket === 'En proceso'): ?>
+                <div class="alert alert-success h-20 text-dark text-center">Ticket Cerrado</div>
+            <?php else: ?>
                 <section id="botonesMensajes">
                     <input type="text" placeholder="Escribe tu mensaje aquí" id="msj" name="msj">
                     <button
@@ -29,10 +40,11 @@ $titulo = 'Mensajes';
                         data-id-remitente="<?= Yii::$app->user->identity->id ?>"
                         data-tipo-remitente="<?= Yii::$app->user->identity->role ?>">Enviar</button>
                 </section>
-            </section>
+            <?php endif; ?>
+        </section>
     </div>
 </main>
-
+<?= $this->render('_modal_reporte', ['reporteForm' => $reporteForm, 'id_ticket' => $ticket->id, 'id_cliente' => $ticket->id_cliente, 'id_operador' => $ticket->id_operador]) ?>
 
 <?php
 

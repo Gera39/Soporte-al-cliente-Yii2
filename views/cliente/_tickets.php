@@ -1,5 +1,6 @@
 <?php
 
+use app\models\MensajesTicket;
 use yii\helpers\Url;
 use yii\grid\GridView;
 use yii\data\ArrayDataProvider;
@@ -12,6 +13,7 @@ $dataProvider = new ArrayDataProvider([
 echo GridView::widget([
     'summary' => '',
     'dataProvider' => $dataProvider,
+
     'columns' => [
         [
             'label' => 'Prioridad',
@@ -82,36 +84,61 @@ echo GridView::widget([
             'contentOptions' => ['style' => 'text-align: center;'],
             'value' => function ($model) {
                 $buttons = Html::a('Ver', ['ticket/view', 'id' => $model->id], ['class' => 'btn btn-primary']);
-                
-                if (Yii::$app->user->identity->role == 'cliente' || Yii::$app->user->identity->role == 'operador') {
-                    $buttons .= Html::a('<i class="bx bx-pencil"></i>', '#', [
-                        'class' => 'btn btn-success m-2 btn-editar-paquete',
-                        'data-bs-toggle' => 'modal',
-                        'data-bs-target' => '#myModalTicketCliente',
-                        'data-id_categoria' => $model->id_categoria,
-                        'data-prioridad' => $model->prioridad,
-                        'data-descripcion' => $model->descripcion,
-                        'data-id_paquete' => $model->id_package,
-                    ]);
-                    if ($model->estado_ticket !== 'Resuelto') {
-                        $buttons .= Html::a('Cerrar', ['ticket/cerrar', 'id' => $model->id], ['class' => 'btn btn-danger m-2']);
+                $role = Yii::$app->user->identity->role;
+                if ($role === 'cliente') {
+                    if ($model->estado_ticket === 'Pendiente') {
+                        $buttons .= Html::a('Cerrar', '#', [
+                            'class' => 'btn btn-danger m-2',
+                            'onclick' => 'mostrarAlertaTicket(' . $model->id . ')'
+                        ]);
+                        $buttons .= Html::a('<i class="bx bx-pencil"></i>', '#', [
+                            'class' => 'btn btn-success m-2 btn-editar-paquete',
+                            'data-bs-toggle' => 'modal',
+                            'data-bs-target' => '#myModalTicketCliente',
+                            'data-id_categoria' => $model->id_categoria,
+                            'data-prioridad' => $model->prioridad,
+                            'data-descripcion' => $model->descripcion,
+                            'data-id_paquete' => $model->id_package,
+                        ]);
+                    }
+                } elseif ($role === 'operador') {
+                    if ($model->estado_ticket === 'En proceso') {
+                        $buttons .= Html::a('Cerrar', '#', [
+                            'class' => 'btn btn-danger m-2',
+                            'onclick' => 'openSweetAlert(' . $model->id . ')',
+                        ]);
                     }
                 }
-
-
                 return $buttons;
             }
         ],
         [
             'label' => 'Chat',
             'format' => 'raw',
-            'visible' => Yii::$app->user->identity->role == 'cliente' || Yii::$app->user->identity->role == 'operador',
+            // 'visible' => Yii::$app->user->identity->role == 'cliente' || Yii::$app->user->identity->role == 'operador',
             'contentOptions' => ['style' => 'text-align: center;'],
             'value' => function ($model) {
                 $user = Yii::$app->user->identity;
                 $idUser = $user->id;
-                $rol =$user->role;
-                return Html::a('<i class="bx bx-conversation" > </i>', ['chat/mostrar-chat', 'id' => $model->id,'rol' => $rol,'idUser' => $idUser], ['class' => 'btn btn-primary']);
+                $rol = $user->role;
+
+                // Consulta para el contador de mensajes no leídos (ejemplo)
+                $count = MensajesTicket::find()
+                    ->where(['id_ticket' => $model->id, 'leido' => 0])
+                    ->andWhere(['!=', 'id_remitente' , Yii::$app->user->identity->id])
+                    ->count();
+
+                return Html::a(
+                    '<div style="position: relative; display: inline-block;">
+                        <i class="bx bx-conversation" style="font-size: 1.5em;"></i>
+                        ' . ($count > 0 ? '<span class="badge-notification ">' . $count . '</span>' : '') . '
+                    </div>',
+                    ['chat/mostrar-chat', 'id' => $model->id, 'rol' => $rol, 'idUser' => $idUser],
+                    [
+                        'class' => 'btn btn-primary',
+                        'style' => 'position: relative; padding: 5px 10px;'
+                    ]
+                );
             }
         ]
 

@@ -96,8 +96,7 @@ class PermisosController extends Controller
 
     public function actionEliminar($id, $idUsuario)
     {
-        $seccion = SeccionesAcciones::findOne(['id_secciones' => $id, 'id_usuario' => $idUsuario]);
-        $seccion->delete();
+        SeccionesAcciones::deleteAll(['id_secciones' => $id, 'id_usuario' => $idUsuario]);
         return $this->redirect(['permisos/view', 'id' => $idUsuario]);
     }
 

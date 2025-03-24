@@ -35,13 +35,16 @@ class LoginController extends Controller{
         if(!empty($result) && $result[0]["result"] == 200){
             $id = $result[0]['id'];
             $user = User::findOne($id);
-            if ($user) {
+            if ($user && $user->estado === 1 ) {
                 Yii::$app->user->login($user);
+                return $this->redirect(['login/entrar' , 'id' => $id]);
+            }else{
+                Yii::$app->session->setFlash('error' ,'Parece que estas bloqueado');
+                return $this->redirect(['panel/notfound']);
             }
-            return $this->redirect(['login/entrar' , 'id' => $id]);
         }else{
+
             return $this->redirect(['index', 'mensaje' =>'error']);
-         
         }
     }
 
@@ -52,14 +55,22 @@ class LoginController extends Controller{
     }
 
     public function actionRegisterCliente(){
-        $datos = Yii::$app->request->post('RegisterForm',[]);
-        $sql = "CALL crear_cliente(:username,:pass )";
+      
+        $model = new RegisterForm();
+        $model->load(Yii::$app->request->post());
+        if(!$model->validate()){
+            return $this->redirect(['index', 'mensaje' =>'error']);
+        }
+        $sql = "CALL crear_cliente(:nombre,:username,:password,:email,:telefono )";
         $result = Yii::$app->db->createCommand($sql, [
-            ':username' => $datos['username'] ?? '',
-            ':pass' => $datos['password'] ?? '',  
+            ':nombre' => $model->nombre ?? '',
+            ':username' => $model->nombre . substr(str_shuffle('abcdefghijklmnopqrstuvwxyz'), 0, 4) ?? '',
+            ':password' => $model->password ?? '',
+            ':email' => $model->email ?? '',
+            ':telefono' => $model->telefono ?? '',  
         ])->queryAll();
-        if(!empty($result) && $result[0]["result"] == 200){
-            $id = $result[0]['id'];
+        if(!empty($result) && $result[0]["result"] == 201){
+            $id = $result[0]['id_usuario'];
             $user = User::findOne($id);
             if ($user) {
                 Yii::$app->user->login($user);
@@ -72,7 +83,7 @@ class LoginController extends Controller{
     }
 
     public function actionEntrar(){
-        return $this->redirect(['panel/dashboard-admin']);
+      return $this->redirect(['panel/dashboard']);
     }
 }
 ?>

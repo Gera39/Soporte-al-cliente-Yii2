@@ -1,17 +1,22 @@
 <?php
 
+use app\models\User;
+
+if(Yii::$app->user->isGuest){
+    Yii::$app->session->setFlash('error', 'Debes de iniciar sesion, regresa al login');
+    Yii::$app->response->redirect(['panel/notfound'])->send();
+    Yii::$app->end();
+}
+
+if (User::getEstadoUsuario()) {
+    Yii::$app->session->setFlash('error', 'Estas bloqueado por el administrador');
+    Yii::$app->response->redirect(['panel/notfound'])->send();
+    Yii::$app->end();
+}
+
+
 /** @var yii\web\View $this */
 /** @var string $content */
-
-use app\assets\AppAsset;
-use app\widgets\Alert;
-use yii\bootstrap5\Breadcrumbs;
-use yii\bootstrap5\Html;
-use yii\bootstrap5\Nav;
-use yii\widgets\Pjax;
-use yii\bootstrap5\NavBar;
-
-
 $theme = Yii::$app->request->cookies->getValue('theme', 'light');
 
 $this->registerCssFile('@web/css/estilos_layout.css');

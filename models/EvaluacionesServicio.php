@@ -44,7 +44,7 @@ class EvaluacionesServicio extends \yii\db\ActiveRecord
             [['fecha_evaluacion'], 'safe'],
             [['id_ticket'], 'exist', 'skipOnError' => true, 'targetClass' => Tickets::class, 'targetAttribute' => ['id_ticket' => 'id']],
             [['id_cliente'], 'exist', 'skipOnError' => true, 'targetClass' => Cliente::class, 'targetAttribute' => ['id_cliente' => 'id']],
-            [['id_operador'], 'exist', 'skipOnError' => true, 'targetClass' => Operadores::class, 'targetAttribute' => ['id_operador' => 'id']],
+            [['id_operador'], 'exist', 'skipOnError' => true, 'targetClass' => Operador::class, 'targetAttribute' => ['id_operador' => 'id']],
         ];
     }
 
@@ -81,7 +81,7 @@ class EvaluacionesServicio extends \yii\db\ActiveRecord
      */
     public function getOperador()
     {
-        return $this->hasOne(Operadores::class, ['id' => 'id_operador']);
+        return $this->hasOne(Operador::class, ['id' => 'id_operador']);
     }
 
     /**

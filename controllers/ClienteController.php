@@ -107,13 +107,13 @@ class ClienteController extends Controller
 
     public function actionFiltrar($estado, $idOperador)
     {
-        $tickets = Tickets::find()->where(['estado_ticket' => $estado, 'id_cliente' => $idOperador])->all();
+        $tickets = Tickets::find()->where(['estado_ticket' => $estado, 'id_cliente' => $idOperador])->orderBy(['id' => SORT_DESC])->all();
         return $this->renderPartial('/cliente/_tickets', ['tickets' => $tickets]);
     }
 
     public function actionUpdateEstatus($id = null)
     {
-        
+
         $model = $this->findModel($id);
         if (!$model) {
             Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
@@ -157,21 +157,27 @@ class ClienteController extends Controller
 
     public function actionTicketCliente()
     {
+
+        if (User::getPermitidoSeccion(2)) {
+            Yii::$app->session->setFlash('error', 'Pagina no encontrada');
+            return $this->redirect(['panel/notfound']);
+        }
         $ticketForm = new TicketForm();
         $paquetes = $this->enlazarPaquetes(Yii::$app->user->identity->cliente->id);
         $categoria = Categories::find()->all();
         $cliente = $this->findCliente(Yii::$app->user->identity->cliente->id);
-        $tickets = Tickets::find()->where(['id_cliente' => $cliente->id])->all();
-        return $this->render('ticket', ['tickets' => $tickets, 'ticketForm' => $ticketForm, 'categoria' => $categoria, 'paquetes' => $paquetes]);
+        $tickets = Tickets::find()->where(['id_cliente' => $cliente->id])->orderBy(['id' => SORT_DESC])->all();
+        return $this->render('ticket', ['tickets' => $tickets, 'ticketForm' => $ticketForm, 'categoria' => $categoria, 'paquetes' => $paquetes,'cliente' => $cliente]);
     }
 
-    public function actionChatCliente($id,$rol)
+    public function actionChatCliente($id, $rol)
     {
-            return $this->redirect(['chat/mostrar-chat', 'id' => $id,'rol' => $rol]);
+        return $this->redirect(['chat/mostrar-chat', 'id' => $id, 'rol' => $rol]);
     }
 
-    public function actionIndex(){
-        $clientes = Cliente::find()->orderBy(['id' => SORT_DESC])->all(); 
+    public function actionIndex()
+    {
+        $clientes = Cliente::find()->orderBy(['id' => SORT_DESC])->all();
         return $this->render('index', ['clientes' => $clientes]);
     }
 }

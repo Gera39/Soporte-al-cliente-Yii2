@@ -21,18 +21,13 @@ if (isset($_GET["mensaje"])) {
 
         <?php $form = ActiveForm::begin([
             'id' => 'register-form',
-            'action' => ['login/login-custom'],
+            'action' => ['login/register-cliente'],
             'method' => 'post',
         ]); ?>
 
 
         <h1>Crear Cuenta</h1>
-        <div class="social-icons">
-            <?= Html::a('<i class="fa-brands fa-google"></i>', '#', ['class' => 'icon']) ?>
-        </div>
-        <span>o crea el registro</span>
         <?= $form->field($modelCreate, 'nombre')->textInput(['placeholder' => 'Nombre', 'required' => true])->label(false) ?>
-        <?= $form->field($modelCreate, 'apellido')->textInput(['placeholder' => 'Apellido', 'required' => true])->label(false) ?>
         <?= $form->field($modelCreate, 'email')->textInput(['placeholder' => 'Correo o Usuario', 'required' => true])->label(false) ?>
         <?= $form->field($modelCreate, 'password')->passwordInput(['placeholder' => 'Contraseña', 'required' => true])->label(false) ?>
         <?= $form->field($modelCreate, 'telefono')->textInput(['type' => 'tel', 'placeholder' => 'Teléfono', 'required' => true])->label(false) ?>
@@ -51,11 +46,6 @@ if (isset($_GET["mensaje"])) {
         ]); ?>
 
         <h1>Iniciar Sesion</h1>
-        <div class="social-icons">
-            <?= Html::a('<i class="fa-brands fa-google"></i>', '#', ['class' => 'icon']) ?>
-        </div>
-        <span>o iniciar por usuario y contraseña</span>
-
         <?= $form->field($model, 'username')->textInput(['placeholder' => 'Correo o Usuario', 'required' => true])->label(false) ?>
         <?= $form->field($model, 'password')->passwordInput(['placeholder' => 'Contraseña', 'required' => true])->label(false) ?>
 
@@ -69,7 +59,7 @@ if (isset($_GET["mensaje"])) {
         <div class="toggle">
             <div class="toggle-panel toggle-left">
                 <h1>Bienvenido a CodeTrail!</h1>
-                <p>Holiswuis</p>
+                <p>Esfuerzate al maximo</p>
                 <button class="hidden" id="login">Iniciar Sesion</button>
             </div>
             <div class="toggle-panel toggle-right">

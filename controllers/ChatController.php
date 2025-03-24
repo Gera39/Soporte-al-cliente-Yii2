@@ -8,15 +8,13 @@ use app\models\Chat;
 use app\models\Cliente;
 use app\models\MensajesTicket;
 use app\models\Operador;
+use app\models\ReporteOperadores;
 use app\models\Tickets;
 
 class ChatController extends Controller
 {
     public $layout = 'codetrail/main';
-    public function actionMostrar($rol,$idUser){
-        echo 'asdffasdf' . $rol . $idUser;
-        return;
-    }
+
     public function actionMostrarChat($id,$rol,$idUser)
     {
         $ticket = '';
@@ -30,17 +28,19 @@ class ChatController extends Controller
                 }
             }
         }
+
+        $reporte = new ReporteOperadores();
         $tickets = $this->obtenerTickets($idUser,$rol);
-        return $this->render('chat', ['ticket' => $ticket,'tickets' => $tickets]);
+        return $this->render('chat', ['ticket' => $ticket,'tickets' => $tickets,'reporteForm' => $reporte]);
     }
 
    public function obtenerTickets($id,$rol){
         if($rol === 'cliente'){
             $cliente = Cliente::findOne(['usuario_id' => $id]);
-            $tickets = Tickets::find(['id_cliente' => $cliente->id])->orderBy(['id' => SORT_DESC])->all();
+            $tickets = Tickets::find()->where(['id_cliente' => $cliente->id])->orderBy(['id' => SORT_DESC])->all();
         }else{
             $operador = Operador::findOne(['usuario_id' => $id]);
-            $tickets = Tickets::find(['id_operador' => $operador->id])->orderBy(['id' => SORT_DESC])->all();
+            $tickets = Tickets::find()->where(['id_operador' => $operador->id])->orderBy(['id' => SORT_DESC])->all();
         }
         return $tickets;
    }
@@ -75,6 +75,6 @@ class ChatController extends Controller
     public function actionActualizarMensajes($id)
     {
         $mensajes = MensajesTicket::find()->where(['id_ticket' => $id])->all();
-        return $this->renderPartial('_mensajes', ['mensajes' => $mensajes]);
+        return $this->renderPartial('_mensajes', ['mensajes' => $mensajes, 'rol' => Yii::$app->user->identity->role]);
     }
 }

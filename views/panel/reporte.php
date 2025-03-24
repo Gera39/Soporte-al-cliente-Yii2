@@ -1,6 +1,3 @@
-<?php
-
-?>
 <main>
 	<div class="head-title">
 		<div class="left mb-5">

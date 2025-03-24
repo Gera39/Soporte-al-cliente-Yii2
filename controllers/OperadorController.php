@@ -47,6 +47,12 @@ class OperadorController extends Controller
         return $this->redirect('panel/empleados');
     }
 
+    public function actionTicket(){
+        $model = User::findOne(Yii::$app->user->identity->id);
+        $tickets = Tickets::find()->where(['id_operador' => Yii::$app->user->identity->operadores->id])->all();
+        return $this->render('ticket', ['tickets' => $tickets, 'model' => $model]);
+    }
+
     public function actionGuardarOperador()
     {
         $request = Yii::$app->request;
@@ -55,13 +61,16 @@ class OperadorController extends Controller
         if ($model->validate()) {
 
             $departamento = $model->departamento . ' ' . $model->carrera;
-            $sql = "CALL crear_empleado(:nombre,:username,:email,:password,:departamento)";
+            $sql = "CALL crear_empleado(:nombre,:username,:email,:password,:departamento,:telefono,:turno,:dias)";
             $result = Yii::$app->db->createCommand($sql, [
                 ':nombre' => $model->nombre ?? '',
                 ':username' => $model->nombre . substr(str_shuffle('abcdefghijklmnopqrstuvwxyz'), 0, 4) ?? '',
                 ':email' => $model->email ?? '',
                 ':password' => $model->password ?? '',
                 ':departamento' => $departamento ?? '',
+                ':telefono' => $model->telefono ?? '',
+                ':turno' =>  '',
+                ':dias' =>  '',
             ])->queryAll();
             Yii::$app->session->setFlash('success', 'El registro se ha guardado con exito');
             return $this->redirect(['panel/empleados']);
@@ -100,7 +109,8 @@ class OperadorController extends Controller
             $model->load($this->request->post());
             $modelOperador->load($this->request->post());
             $modelOperador->departamento = $modelM . " " . $this->request->post()['Operador']['departamento'];
-
+            $modelOperador->turno = $this->request->post()['Operador']['turno'];
+            $modelOperador->dias = implode(',', $this->request->post()['Operador']['dias']);
             if ($model->validate() && $modelOperador->validate()) {
                 $model->save();
                 $modelOperador->save();

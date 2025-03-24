@@ -1,10 +1,7 @@
 <?php
 
-use yii\grid\GridView;
 use yii\helpers\Html;
-use yii\data\ArrayDataProvider;
 use yii\widgets\ActiveForm;
-use yii\bootstrap5\Modal;
 
 $clase ="";
 $correo ="";
@@ -13,20 +10,12 @@ if(Yii::$app->session->hasFlash('error')){
 	$correo = Yii::$app->session->getFlash('error');
 	Yii::$app->session->removeFlash('error');
 }
+
 ?>
 <main>
 	<div class="head-title">
-		<div class="left">
+		<div class="left mb-4">
 			<h1>Empleados</h1>
-			<ul class="breadcrumb">
-				<li>
-					<a href="#">Administrador</a>
-				</li>
-				<li><i class='bx bx-chevron-right'></i></li>
-				<li>
-					<a class="active" href="#">Empleados</a>
-				</li>
-			</ul>
 		</div>
 	</div>
 
@@ -96,6 +85,14 @@ if(Yii::$app->session->hasFlash('error')){
 							</div>
 
 							<div class="mb-3">
+								<?= $form->field($model, 'telefono')->textInput([
+									'class' => 'form-control',
+									'id' => 'telefonoEmpleado',
+									'required' => true
+								])->label('Teléfono', ['class' => 'form-label text-dark']) ?>
+							</div>
+
+							<div class="mb-3">
 								<?= $form->field($model, 'password')->passwordInput([
 									'class' => 'form-control',
 									'id' => 'passwordEmpleado',
@@ -144,63 +141,7 @@ if(Yii::$app->session->hasFlash('error')){
 					</div>
 				</div>
 			</div>
-			<?=
-			GridView::widget([
-				'dataProvider' => new ArrayDataProvider(['allModels' => $empleados]),
-				'columns' => [
-					
-					[
-						'attribute' => 'nombre',
-						'headerOptions' => ['style' => 'text-align: center; font-size:16px;'],
-					],
-					[
-						'attribute' => 'email',
-						'headerOptions' => ['style' => 'text-align: center; font-size:16px;'],
-						'contentOptions' => ['style' => 'text-align: center;'],
-					],
-					[
-						'attribute' => 'departamento',
-						'headerOptions' => ['style' => 'text-align: center; font-size:16px;'],
-					],
-					[
-						'attribute' => 'Estado',
-						'headerOptions' => ['style' => 'text-align: center; font-size:16px;'],
-						'contentOptions' => function ($model) {
-							return ['style' => 'text-align: center; background-color:' . ($model['estado'] == '1' ? '#d4edda' : '#f5c6cb')];
-						},
-						'value' => function ($model) {
-							return ($model['estado']  == '1') ? 'Activo' : 'Bloqueado';
-						}
-					],
-					[
-						'attribute' => 'Permiso',
-						'format' => 'raw',
-						'headerOptions' => ['style' => 'text-align: center; font-size:16px;'],
-						'contentOptions' => ['style' => 'text-align: center;'],
-						'value' => function ($model) {
-							$text = ($model['estado'] == '1') ? 'Bloquear' : 'Desbloquear';
-							return Html::beginForm(['/operador/update-estatus', 'id' => $model['id']])
-								. Html::hiddenInput('User[estado]', $model['estado'] == '1' ? '0' : '1')
-								. Html::submitButton(
-									$text,
-									['class' => 'btn btn-sm ' . ($model['estado'] == '1' ? 'btn-danger' : 'btn-success')]
-								)
-								. Html::endForm();
-						}
-					],
-					[
-						'attribute' => 'Acciones',
-						'headerOptions' => ['style' => 'text-align: center; font-size:16px;'],
-						'contentOptions' => ['style' => 'text-align: center;'],
-						'format' => 'raw',
-						'value' => function ($model) {
-							return Html::a('<i class="bx bx-user"></i>', ['operador/view', 'id' => $model['id']], ['class' => 'btn btn-sm btn-primary '])
-								. Html::a('<i class="bx bx-edit"></i>', ['operador/update', 'id' => $model['id']], ['class' => 'btn btn-sm btn-warning']);
-						}
-					]
-				],
-			]);
-			?>
+			<?= $this->render('_empleados' ,['empleados' => $empleados])?>
 		</div>
 	</div>
 	<section id="mi_modal" class="modalito <?= $clase?>">
