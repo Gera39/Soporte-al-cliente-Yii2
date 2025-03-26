@@ -4,14 +4,20 @@ use yii\data\ArrayDataProvider;
 use yii\helpers\Html;
 use yii\grid\GridView;
 
-
+$seccionesFiltradas = array_filter($secciones, function($seccion) {
+    // Excluir las secciones llamadas "Admin" y "Configuración"
+    return !in_array($seccion->nombre, ['logs_sistema']); 
+});
 echo GridView::widget([
     'dataProvider' => new ArrayDataProvider([
-        'allModels' => $secciones,
+        'allModels' => $seccionesFiltradas,
         'pagination' => false,
     ]),
     'columns' => [
-        'nombre',
+        [
+            'label' => 'Nombre Seccion',
+            'value' => 'nombre',
+        ],
         [
             'label' => 'Clientes',
             'format' => 'raw',

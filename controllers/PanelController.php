@@ -8,39 +8,17 @@ use yii\web\Controller;
 
 use app\models\EmpleadoForm;
 use app\models\Logs;
+use app\models\RegistroAsistencia;
 use app\models\ReporteOperadores;
 use app\models\Tickets;
 use app\models\User;
-use yii\filters\AccessControl;
 
-class PanelController extends Controller
+
+class PanelController extends BaseController
 {
     public $layout = 'codetrail/main';
 
-    public function behaviors()
-    {
-        return [
-            'access' => [  // <-- Configuración de AccessControl
-                'class' => AccessControl::class,
-                'rules' => [
-                    [
-                        'allow' => true,
-                        'roles' => ['@'],  // Solo usuarios logueados
-                    ],
-                    // Más reglas personalizadas si las necesitas...
-                ],
-                'denyCallback' => function ($rule, $action) {
-                    if (Yii::$app->user->isGuest) {
-                        Yii::$app->session->setFlash('error', 'Debes de iniciar sesion, regresa al login');
-                        Yii::$app->response->redirect(['panel/notfound']);
-                    } else {
-                        Yii::$app->session->setFlash('error', 'No tienes permisos para acceder');
-                        Yii::$app->response->redirect(['panel/notfound']);
-                    }
-                }
-            ],
-        ];
-    }
+
     public function actionDashboardAdmin()
     {
         $logs = Logs::find()->orderBy(['id' => SORT_DESC])->limit(5)->all();
@@ -64,9 +42,25 @@ class PanelController extends Controller
 
     public function actionDashboardOperador()
     {
-        $operador = User::findOne(Yii::$app->user->id);
+        date_default_timezone_set('America/Mexico_City'); // Ajusta la zona
 
-        return $this->render('dashboardOperador', ['model' => $operador]);
+        $operador = User::findOne(Yii::$app->user->id);
+        $ultimoRegistro = $operador->operadores->getRegistroAsistencias()
+            ->orderBy(['fecha' => SORT_DESC]) 
+            ->one();
+
+       
+        if ($ultimoRegistro) {
+            $fechaRegistro = Yii::$app->formatter->asDate($ultimoRegistro->fecha, 'php:Y-m-d');
+            $fechaHoy = date('Y-m-d'); 
+            if ($fechaRegistro === $fechaHoy) {
+                Yii::$app->session->setFlash('mensaje-salida', 'Ya tienes un registro de asistencia hoy. Solo marca salida y saldras del sistema');
+            } else {
+                Yii::$app->session->setFlash('info', 'No hay un registro de asistencia hoy.');
+            }
+        }
+        $registroAsistencia = new RegistroAsistencia();
+        return $this->render('dashboardOperador', ['model' => $operador, 'asistencia' => $registroAsistencia]);
     }
     public function actionDashboardCliente()
     {
@@ -90,9 +84,9 @@ class PanelController extends Controller
             ])->queryAll();
             if ($result[0]['resultado'] === 201) {
                 Yii::$app->session->setFlash('success', 'Se ha cambiado correctamente la contraseña');
-            } else if($result[0]['resultado'] === 400){
+            } else if ($result[0]['resultado'] === 400) {
                 Yii::$app->session->setFlash('error', 'Contraseña actual no es la correcta');
-            }else{
+            } else {
                 Yii::$app->session->setFlash('error', 'Ocurrio un error intentelo nuevamente');
             }
         }
@@ -121,6 +115,10 @@ class PanelController extends Controller
 
     public function actionReportes()
     {
+        if (User::getPermitidoSeccion(3)) {
+            Yii::$app->session->setFlash('error', 'Pagina bloqueada');
+            return $this->redirect(['panel/notfound']);
+        }
         $user = Yii::$app->user->identity;
         if ($user->role === 'admin') {
             $reportes = ReporteOperadores::find()->orderBy(['id' => SORT_DESC])->all();
@@ -137,11 +135,16 @@ class PanelController extends Controller
 
     public function actionPerfil()
     {
+        if (User::getPermitidoSeccion(1)) {
+            Yii::$app->session->setFlash('error', 'Pagina bloqueada');
+            return $this->redirect(['panel/notfound']);
+        }
         $model =  User::findOne(Yii::$app->user->id);
         return $this->render('perfil', ['model' => $model]);
     }
     public function actionTicketsEmpleado()
     {
+        
         $tickets = Tickets::find()->orderBy(['id' => SORT_DESC])->all();
         return $this->render('ticketEmpleado', ['tickets' => $tickets]);
     }
@@ -168,6 +171,10 @@ class PanelController extends Controller
 
     public function actionResoluciones()
     {
+        if (User::getPermitidoSeccion(6)) {
+            Yii::$app->session->setFlash('error', 'Pagina bloqueada');
+            return $this->redirect(['panel/notfound']);
+        }
         $search = Yii::$app->request->get('search');
         $sql = "SELECT * FROM resoluciones";
         if (!empty($search)) {

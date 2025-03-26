@@ -1,22 +1,9 @@
-
 <main>
     <div class="head-title">
-        <div class="left">
+        <div class="left mb-5">
             <h1>Vista Rapida</h1>
-            <ul class="breadcrumb">
-                <li>
-                    <a href="#">Cliente</a>
-                </li>
-                <li><i class='bx bx-chevron-right'></i></li>
-                <li>
-                    <a class="active" href="#">Vista Rapida</a>
-                </li>
-            </ul>
         </div>
-
-
     </div>
-
     <ul class="box-info">
         <li>
             <span class="text d-flex align-items-center justify-content-between">
@@ -60,18 +47,11 @@
                 <h3>100</h3>
                 <p>Telefonia</p>
             </span>
-         <li>
-                <i class='bx bx-wifi'></i>
-                <span class="text">
+        <li>
+            <i class='bx bx-wifi'></i>
+            <span class="text">
                 <h3>Internet</h3>
-                </span>
-            </li>
-         
-       
-
-
+            </span>
+        </li>
     </ul>
-
-
-
 </main>

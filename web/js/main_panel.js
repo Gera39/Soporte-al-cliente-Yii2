@@ -8,30 +8,30 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 });
-const switchMode = document.getElementById('switch-mode');
+// const switchMode = document.getElementById('switch-mode');
 
 
-function getCookie(name) {
-  const value = `; ${document.cookie}`;
-  const parts = value.split(`; ${name}=`);
-  if (parts.length === 2) return parts.pop().split(';').shift();
-}
+// function getCookie(name) {
+//   const value = `; ${document.cookie}`;
+//   const parts = value.split(`; ${name}=`);
+//   if (parts.length === 2) return parts.pop().split(';').shift();
+// }
 
-const theme = getCookie('theme') || 'light';
-if (theme === 'dark') {
-  document.body.classList.add('dark');
-  switchMode.checked = true;
-}
+// const theme = getCookie('theme') || 'light';
+// if (theme === 'dark') {
+//   document.body.classList.add('dark');
+//   switchMode.checked = true;
+// }
 
-switchMode.addEventListener('change', function () {
-  if(this.checked) {
-    document.body.classList.add('dark');
-    document.cookie = "theme=dark; path=/";
-  } else {
-    document.body.classList.remove('dark');
-    document.cookie = "theme=light; path=/";
-  }
-});
+// switchMode.addEventListener('change', function () {
+//   if(this.checked) {
+//     document.body.classList.add('dark');
+//     document.cookie = "theme=dark; path=/";
+//   } else {
+//     document.body.classList.remove('dark');
+//     document.cookie = "theme=light; path=/";
+//   }
+// });
 
 
 // const validCareers = ["redes","telecomunicaciones","seguridad informatica","electronica", "desarrollo de software"];
@@ -60,7 +60,7 @@ switchMode.addEventListener('change', function () {
 //     nameInput.setCustomValidity('');
 //   }
 // });
-const cerrarModal =document.getElementById('cerrar_modal');
+const cerrarModal = document.getElementById('cerrar-modal');
 const modal = document.getElementById('mi_modal');
 
 cerrarModal.addEventListener('click', function(){

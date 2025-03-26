@@ -4,19 +4,23 @@ namespace app\controllers;
 
 use Yii;
 use yii\web\Controller;
-use app\models\Chat;
+use app\models\User;
 use app\models\Cliente;
 use app\models\MensajesTicket;
 use app\models\Operador;
 use app\models\ReporteOperadores;
 use app\models\Tickets;
 
-class ChatController extends Controller
+class ChatController extends BaseController
 {
     public $layout = 'codetrail/main';
 
     public function actionMostrarChat($id,$rol,$idUser)
     {
+        if (User::getPermitidoSeccion(4)) {
+            Yii::$app->session->setFlash('error', 'Pagina bloqueada');
+            return $this->redirect(['panel/notfound']);
+        }
         $ticket = '';
         if($id){
             $ticket = Tickets::findOne($id);
@@ -38,9 +42,11 @@ class ChatController extends Controller
         if($rol === 'cliente'){
             $cliente = Cliente::findOne(['usuario_id' => $id]);
             $tickets = Tickets::find()->where(['id_cliente' => $cliente->id])->orderBy(['id' => SORT_DESC])->all();
-        }else{
+        }else if ($rol === 'operador'){
             $operador = Operador::findOne(['usuario_id' => $id]);
             $tickets = Tickets::find()->where(['id_operador' => $operador->id])->orderBy(['id' => SORT_DESC])->all();
+        }else{
+            $tickets = Tickets::find()->orderBy(['id' => SORT_DESC])->all();
         }
         return $tickets;
    }

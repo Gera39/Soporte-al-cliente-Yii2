@@ -8,7 +8,7 @@ use yii\web\Controller;
 use app\models\Tickets;
 use yii\web\UploadedFile;
 
-class TicketController extends Controller
+class TicketController extends BaseController
 {
     public $layout = 'codetrail/main';
     public function actionLevantarTicket()

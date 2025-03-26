@@ -29,7 +29,6 @@ if(Yii::$app->session->hasFlash('error')){
 		</li>
 		<li>
 			<i class='bx bx-ghost' style="background-color:#000000; color:#ffffff;"></i>
-
 			<span class="text">
 				<h3><?= ($empleados[0]['inactivo']) ? $empleados[0]['inactivo'] : 0 ?></h3>
 				<p>Bloqueados</p>
@@ -37,13 +36,11 @@ if(Yii::$app->session->hasFlash('error')){
 		</li>
 		<li>
 			<i class='bx bx-user-voice' style="background-color:#ffffff; color:#000000;"></i>
-
 			<span class="text">
 				<h3><?= ($empleados[0]['activo']) ? $empleados[0]['activo'] : 0?></h3>
 				<p>Activos</p>
 			</span>
 		</li>
-
 	</ul>
 	<div class="table-data">
 		<div class="order">
@@ -51,7 +48,6 @@ if(Yii::$app->session->hasFlash('error')){
 				<h3>Lista de Empleados</h3>
 				<a href="#" data-bs-toggle="modal" data-bs-target="#myModal" class="btn btn-primary  p-2 "><i class='bx bx-plus'></i>Añadir empleado</a>
 			</div>
-
 			<div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
 				<div class="modal-dialog modal-lg modal-dialog-centered">
 					<div class="modal-content">
@@ -144,12 +140,12 @@ if(Yii::$app->session->hasFlash('error')){
 			<?= $this->render('_empleados' ,['empleados' => $empleados])?>
 		</div>
 	</div>
-	<section id="mi_modal" class="modalito <?= $clase?>">
+	<section id="mi_modal" class="modalito  <?= $clase?>">
 		<div class="modal_container">
 			<img class="modal_img" src="<?= Yii::getAlias('@web') ?>/images/modal.svg" alt="Descripción de la imagen">
 			<h2 class="modal_title">Ups Algo salio mal!</h2>
 			<p class="modal_paraghap">Este correo <span class="bg-danger text-white p-2" style="border-radius:6px;"><?= $correo?></span> ya esta en uso intenta con otro correo</p>
-			<button id="cerrar_modal" class="btn btn-success" style="width: 200px;">Entendido</button>
+			<button id="cerrar-modal" class="btn btn-success" style="width: 200px;">Entendido</button>
 		</div>
 	</section>
 </main>

@@ -20,7 +20,7 @@ $titulo = 'Mensajes';
 
 
         <section id="conversacion" style="border:none;">
-            <?php if ($ticket->estado_ticket === 'Pendiente'): ?>
+            <?php if ($ticket->estado_ticket === 'Pendiente' && Yii::$app->user->identity->role !== 'admin'): ?>
                 <div class="d-flex justify-content-around m-3">
                     <a href="#" data-bs-toggle="modal" data-bs-target="#myModalReporte" class="btn btn-danger " style='width:200px;'><i class='bx bx-alarm-exclamation'></i>Levantar Reporte</a>
                     <?php if ($rol === 'cliente'): ?>
@@ -29,7 +29,8 @@ $titulo = 'Mensajes';
                 </div>
             <?php endif; ?>
             <?= $this->render('_mensajes', ['mensajes' => $mensajes , 'rol' => $rol]) ?>
-            <?php if ($ticket->estado_ticket === 'Resuelto' || $ticket->estado_ticket === 'En proceso'): ?>
+            <?php if(Yii::$app->user->identity->role !== 'admin'):?>
+                <?php if ($ticket->estado_ticket === 'Resuelto' || $ticket->estado_ticket === 'En proceso'): ?>
                 <div class="alert alert-success h-20 text-dark text-center">Ticket Cerrado</div>
             <?php else: ?>
                 <section id="botonesMensajes">
@@ -41,6 +42,7 @@ $titulo = 'Mensajes';
                         data-tipo-remitente="<?= Yii::$app->user->identity->role ?>">Enviar</button>
                 </section>
             <?php endif; ?>
+            <?php endif;?>
         </section>
     </div>
 </main>

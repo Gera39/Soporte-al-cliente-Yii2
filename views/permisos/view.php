@@ -63,44 +63,47 @@ $this->title = "Permisos del " . $model->role . " " . ucfirst($model->nombre);
                 ]),
                 'summary' => false,
                 'columns' => [
-                    'nombre',
                     [
-                        'label' => 'Acciones',
-                        'format' => 'raw',
-                        'value' => function ($model) use ($seccionesData, $idUsurio) {
-                            $acciones = $seccionesData[$model->id]['acciones'] ?? [];
-                            $accionesNombres = [1 => 'crear', 2 => 'leer', 3 => 'modificar', 4 => 'borrar'];
-                    
-                            $output = Html::beginForm(['permisos/actualizar'], 'post');
-                    
-                            // Campo oculto para la estructura del array
-                            $output .= Html::hiddenInput("Secciones[acciones][{$model->id}]", '');
-                    
-                            foreach ($accionesNombres as $id => $nombre) {
-                                $accion = current(array_filter($acciones, function ($a) use ($nombre) {
-                                    return $a->nombre === $nombre;
-                                }));
-                    
-                                $output .= Html::checkbox("Secciones[acciones][{$model->id}][]", (bool)$accion, [
-                                    'value' => $id,
-                                    'label' => Html::encode($nombre),
-                                    'class' => 'form-check-input',
-                                    'labelOptions' => ['style' => 'margin-right: 10px;']
-                                ]);
-                            }
-                    
-                            $output .= Html::hiddenInput('idUsuario', $idUsurio); // Agrega el ID del usuario autenticado
-                    
-                            // Botón de enviar
-                            $output .= Html::submitButton('Guardar cambios', [
-                                'class' => 'btn btn-primary mt-2'
-                            ]);
-                    
-                            $output .= Html::endForm();
-                    
-                            return $output ?: 'Sin acciones';
-                        }
+                        'label' => 'Nombre Seccion',
+                        'value' => 'nombre',
                     ],
+                    // [
+                    //     'label' => 'Acciones',
+                    //     'format' => 'raw',
+                    //     'value' => function ($model) use ($seccionesData, $idUsurio) {
+                    //         $acciones = $seccionesData[$model->id]['acciones'] ?? [];
+                    //         $accionesNombres = [1 => 'crear', 2 => 'leer', 3 => 'modificar', 4 => 'borrar'];
+                    
+                    //         $output = Html::beginForm(['permisos/actualizar'], 'post');
+                    
+                    //         // Campo oculto para la estructura del array
+                    //         $output .= Html::hiddenInput("Secciones[acciones][{$model->id}]", '');
+                    
+                    //         foreach ($accionesNombres as $id => $nombre) {
+                    //             $accion = current(array_filter($acciones, function ($a) use ($nombre) {
+                    //                 return $a->nombre === $nombre;
+                    //             }));
+                    
+                    //             $output .= Html::checkbox("Secciones[acciones][{$model->id}][]", (bool)$accion, [
+                    //                 'value' => $id,
+                    //                 'label' => Html::encode($nombre),
+                    //                 'class' => 'form-check-input',
+                    //                 'labelOptions' => ['style' => 'margin-right: 10px;']
+                    //             ]);
+                    //         }
+                    
+                    //         $output .= Html::hiddenInput('idUsuario', $idUsurio); // Agrega el ID del usuario autenticado
+                    
+                    //         // Botón de enviar
+                    //         $output .= Html::submitButton('Guardar cambios', [
+                    //             'class' => 'btn btn-primary mt-2'
+                    //         ]);
+                    
+                    //         $output .= Html::endForm();
+                    
+                    //         return $output ?: 'Sin acciones';
+                    //     }
+                    // ],
                     
                     
                     [

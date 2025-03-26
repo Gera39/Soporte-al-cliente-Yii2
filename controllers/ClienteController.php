@@ -5,16 +5,20 @@ namespace app\controllers;
 use Yii;
 use app\models\Cliente;
 use app\models\User;
-use yii\web\Controller;
 use app\models\Tickets;
 use app\models\Paquete;
 use app\models\Categories;
 use app\models\PaquetesClientes;
 use app\models\TicketForm;
 use yii\web\NotFoundHttpException;
-use app\models\MensajesTicket;
 
-class ClienteController extends Controller
+
+// if(Yii::$app->user->isGuest){
+//     Yii::$app->session->setFlash('error', 'Debes de iniciar sesion, regresa al login');
+//     Yii::$app->response->redirect(['panel/notfound'])->send();
+//     Yii::$app->end();
+// }
+class ClienteController extends BaseController
 {
 
     public $layout = 'codetrail/main';
@@ -63,6 +67,10 @@ class ClienteController extends Controller
 
     public function actionServiciosCliente()
     {
+        if (User::getPermitidoSeccion(7)) {
+            Yii::$app->session->setFlash('error', 'Pagina bloqueada');
+            return $this->redirect(['panel/notfound']);
+        }
         $cliente = $this->findCliente(Yii::$app->user->identity->cliente->id);
         if (!$cliente) {
             throw new \yii\web\NotFoundHttpException('Cliente no encontrado.');
@@ -157,9 +165,8 @@ class ClienteController extends Controller
 
     public function actionTicketCliente()
     {
-
         if (User::getPermitidoSeccion(2)) {
-            Yii::$app->session->setFlash('error', 'Pagina no encontrada');
+            Yii::$app->session->setFlash('error', 'Pagina bloqueada');
             return $this->redirect(['panel/notfound']);
         }
         $ticketForm = new TicketForm();

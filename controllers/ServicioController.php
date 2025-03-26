@@ -11,7 +11,7 @@ use app\models\PaqueteForm; // Ensure that this class exists in the specified na
 use app\models\PaqueteServicios;
 use yii\web\NotFoundHttpException;
 
-class ServicioController extends Controller
+class ServicioController extends BaseController
 {
 
     public $layout = 'codetrail/main';

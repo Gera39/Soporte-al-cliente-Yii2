@@ -23,8 +23,14 @@ $rol = Yii::$app->user->identity->role;
         <?php if ($rol === 'admin'): ?>
             <li>
                 <?= Html::a(
-                    '<i class="bx bx-user"></i> Empleados',
+                    '<i class="bx bx-user"></i> Operadores',
                     ['panel/empleados']
+                ) ?>
+            </li>
+            <li>
+                <?= Html::a(
+                    '<i class="bx bx-stats"></i> Asistencias Operadores',
+                    ['asistencia/index']
                 ) ?>
             </li>
             <li>
@@ -67,20 +73,20 @@ $rol = Yii::$app->user->identity->role;
             </li>
         <?php endif; ?>
         <?php if ($rol === 'cliente' || $rol === 'operador'): ?>
-        <li>
-            <?= Html::a(
-                '<i class="bx bxs-report"></i> Servicios',
-                ['cliente/servicios-cliente']
-            ) ?>
-        </li>
+            <li>
+                <?= Html::a(
+                    '<i class="bx bxs-report"></i> Servicios',
+                    ['cliente/servicios-cliente']
+                ) ?>
+            </li>
         <?php endif; ?>
         <?php if ($rol === 'operador'): ?>
-        <li>
-            <?= Html::a(
-                '<i class="bx bx-stats"></i> Tickets',
-                ['operador/ticket']
-            ) ?>
-        </li>
+            <li>
+                <?= Html::a(
+                    '<i class="bx bx-stats"></i> Tickets',
+                    ['operador/ticket']
+                ) ?>
+            </li>
         <?php endif; ?>
         <li>
             <?= Html::a(

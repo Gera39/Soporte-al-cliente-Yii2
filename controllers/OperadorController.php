@@ -11,7 +11,7 @@ use app\models\Operador;
 use app\models\Tickets;
 use yii\web\NotFoundHttpException;
 
-class OperadorController extends Controller
+class OperadorController extends BaseController
 {
 
     public $layout = 'codetrail/main';
@@ -48,6 +48,10 @@ class OperadorController extends Controller
     }
 
     public function actionTicket(){
+        if (User::getPermitidoSeccion(2)) {
+            Yii::$app->session->setFlash('error', 'Pagina bloqueada');
+            return $this->redirect(['panel/notfound']);
+        }
         $model = User::findOne(Yii::$app->user->identity->id);
         $tickets = Tickets::find()->where(['id_operador' => Yii::$app->user->identity->operadores->id])->all();
         return $this->render('ticket', ['tickets' => $tickets, 'model' => $model]);
@@ -147,7 +151,8 @@ class OperadorController extends Controller
         if (($model = ReporteOperadores::findOne(['id' => $id])) !== null) {
             return $model;
         }
-
         throw new NotFoundHttpException('The requested page does not exist.');
     }
+
+    
 }
