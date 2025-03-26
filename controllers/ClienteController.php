@@ -54,6 +54,15 @@ class ClienteController extends BaseController
         return $paquetesComprados;
     }
 
+    public function actionDashboard()
+    {
+        $cliente = $this->findCliente(Yii::$app->user->identity->cliente->id);
+       
+        $paquetes = $this->enlazarPaquetes($cliente->id);
+        return $this->render('dashboard', ['paquetes' => $paquetes]);
+    }
+    
+
     public function enlazarPaquetes()
     {
         $paquetesComprados = $this->paquetesComprado(Yii::$app->user->identity->cliente->id);

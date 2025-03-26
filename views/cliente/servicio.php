@@ -6,7 +6,15 @@ use yii\helpers\Url;
 /** @var yii\web\View $this */
 /** @var app\models\Seccion $model */
 $this->title = "Tienda ";
+if (Yii::$app->session->hasFlash('success')) {
+    $mensaje = Yii::$app->session->getFlash('success');
+    echo '<div class="alert alert-success m-3" role="alert">';
+    echo $mensaje;
+    echo '</div>';
+    Yii::$app->session->removeFlash('success');
+} 
 ?>
+
 <main>
 
     <div class="head-title">

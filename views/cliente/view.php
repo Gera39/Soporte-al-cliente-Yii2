@@ -18,11 +18,7 @@ $this->title = "Cliente: " . $nombre;
 
     <div class="table-data">
         <div class="order">
-            <p>
-                <?= Html::a('Actualizar', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-              
 
-            </p>
 
             <div class="head">
                 <h2><?= Html::encode('Informacion del cliente  ' . $nombre) ?></h2>

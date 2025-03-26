@@ -23,21 +23,21 @@ if(Yii::$app->session->hasFlash('error')){
 		<li>
 			<i class='bx bxs-briefcase-alt-2'></i>
 			<span class="text">
-				<h3><?= ($empleados[0]['cantidad']) ? $empleados[0]['cantidad'] : 0 ?></h3>
+				<h3><?= ($empleados) ? $empleados[0]['cantidad'] : 0 ?></h3>
 				<p>Empleados</p>
 			</span>
 		</li>
 		<li>
 			<i class='bx bx-ghost' style="background-color:#000000; color:#ffffff;"></i>
 			<span class="text">
-				<h3><?= ($empleados[0]['inactivo']) ? $empleados[0]['inactivo'] : 0 ?></h3>
+				<h3><?= ($empleados) ? $empleados[0]['inactivo'] : 0 ?></h3>
 				<p>Bloqueados</p>
 			</span>
 		</li>
 		<li>
 			<i class='bx bx-user-voice' style="background-color:#ffffff; color:#000000;"></i>
 			<span class="text">
-				<h3><?= ($empleados[0]['activo']) ? $empleados[0]['activo'] : 0?></h3>
+				<h3><?= ($empleados) ? $empleados[0]['activo'] : 0?></h3>
 				<p>Activos</p>
 			</span>
 		</li>

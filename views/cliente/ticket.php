@@ -2,22 +2,21 @@
 
 use yii\helpers\Html;
 use yii\helpers\Url;
+
+if (Yii::$app->session->hasFlash('success')) {
+    $mensaje = Yii::$app->session->getFlash('success');
+    echo '<div class="alert alert-success m-3" role="alert">';
+    echo $mensaje;
+    echo '</div>';
+    Yii::$app->session->removeFlash('success');
+} 
 ?>
 
 <!-- MAIN -->
 <main>
     <div class="head-title">
-        <div class="left">
+        <div class="left mb-5">
             <h1>Tickets</h1>
-            <ul class="breadcrumb">
-                <li>
-                    <a href="#">Tickets</a>
-                </li>
-                <li><i class='bx bx-chevron-right'></i></li>
-                <li>
-                    <a class="active" href="#">tickets</a>
-                </li>
-            </ul>
         </div>
 
     </div>

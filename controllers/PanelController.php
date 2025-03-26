@@ -2,12 +2,14 @@
 
 namespace app\controllers;
 
+use app\models\Cliente;
 use Yii;
 
 use yii\web\Controller;
 
 use app\models\EmpleadoForm;
 use app\models\Logs;
+use app\models\Paquete;
 use app\models\RegistroAsistencia;
 use app\models\ReporteOperadores;
 use app\models\Tickets;
@@ -63,8 +65,32 @@ class PanelController extends BaseController
         return $this->render('dashboardOperador', ['model' => $operador, 'asistencia' => $registroAsistencia]);
     }
     public function actionDashboardCliente()
+    {  
+        $paquetes = $this->enlazarPaquetes();
+        return $this->render('dashboardCliente', ['paquetes' => $paquetes]);
+        // return $this->render('dashboardCliente');
+    }
+
+    public function paquetesComprado($id)
     {
-        return $this->render('dashboardCliente');
+        // Obtener los IDs de los paquetes comprados por el cliente
+        $paquetesComprados = (new \yii\db\Query())
+            ->select('id_paquetes_servicios')
+            ->from('paquetes_clientes')
+            ->where(['id_cliente' => $id])
+            ->column();
+        return $paquetesComprados;
+    }
+
+    
+    public function enlazarPaquetes()
+    {
+        $paquetesComprados = $this->paquetesComprado(Yii::$app->user->identity->cliente->id);
+        $paquetes = Paquete::find()
+            ->where(['id' => $paquetesComprados])
+            ->andWhere(['estado' => 'activo'])
+            ->all();
+        return $paquetes;
     }
 
     public function actionCambiarPass()

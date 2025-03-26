@@ -140,8 +140,18 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
 
     public static function getPermitidoSeccion($seccion){
         $seccionesPermitidas = self::getSeccionesPermitidas(Yii::$app->user->identity->id);
-        return (!in_array($seccion,$seccionesPermitidas) || self::getEstadoUsuario()) ? true: false ;
+        return (!in_array($seccion,$seccionesPermitidas) || self::getEstadoUsuario() || self::getSeccionesDesbloquedas($seccion)) ? true: false ;
     }
+
+    public static function getSeccionesDesbloquedas($id){
+        $seccion = Secciones::findOne($id);
+        $rol = Yii::$app->user->identity->role;
+        if($rol === 'cliente'){
+            return $seccion->estado == '3' || $seccion->estado == '0' ? true: false ;
+        }else if($rol === 'operador'){
+            return $seccion->estado == '2' || $seccion->estado == '0' ? true: false ;
+        }
+    } 
 
     public static function getEstadoUsuario(){
         return Yii::$app->user->identity->estado === 0 ? true: false ;

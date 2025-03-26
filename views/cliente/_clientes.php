@@ -4,11 +4,13 @@ use yii\data\ArrayDataProvider;
 use yii\grid\GridView;
 use yii\helpers\Html;
 
-
+$clientesFiltrados = array_filter($clientes, function($cliente) {
+    return isset($cliente->usuario) && $cliente->usuario->role === 'cliente';
+});
 
 echo GridView::widget([
     'dataProvider' => new ArrayDataProvider([
-        'allModels' => $clientes,
+        'allModels' => $clientesFiltrados,
         'pagination' => false
     ]),
     'summary' => false,
@@ -67,8 +69,7 @@ echo GridView::widget([
             'format' => 'raw',
             'value' => function ($model) {
                 $model = $model->usuario;
-                return Html::a('<i class="bx bx-user"></i>', ['cliente/view', 'id' => $model['id']], ['class' => 'btn btn-sm btn-primary '])
-                    . Html::a('<i class="bx bx-edit"></i>', ['operador/update', 'id' => $model['id']], ['class' => 'btn btn-sm btn-warning']);
+                return Html::a('<i class="bx bx-user"></i>', ['cliente/view', 'id' => $model['id']], ['class' => 'btn btn-sm btn-primary ']);
             }
         ]
     ]
