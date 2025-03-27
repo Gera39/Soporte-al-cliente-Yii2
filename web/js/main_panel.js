@@ -8,69 +8,12 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 });
-// const switchMode = document.getElementById('switch-mode');
-
-
-// function getCookie(name) {
-//   const value = `; ${document.cookie}`;
-//   const parts = value.split(`; ${name}=`);
-//   if (parts.length === 2) return parts.pop().split(';').shift();
-// }
-
-// const theme = getCookie('theme') || 'light';
-// if (theme === 'dark') {
-//   document.body.classList.add('dark');
-//   switchMode.checked = true;
-// }
-
-// switchMode.addEventListener('change', function () {
-//   if(this.checked) {
-//     document.body.classList.add('dark');
-//     document.cookie = "theme=dark; path=/";
-//   } else {
-//     document.body.classList.remove('dark');
-//     document.cookie = "theme=light; path=/";
-//   }
-// });
-
-
-// const validCareers = ["redes","telecomunicaciones","seguridad informatica","electronica", "desarrollo de software"];
-// const careerInput = document.getElementById('carreraEmpleado');
-
-// careerInput.addEventListener('input', function () {
-//   const inputValue = careerInput.value.toLowerCase();
-//   if (validCareers.includes(inputValue)) {
-//     careerInput.setCustomValidity('');
-//   } else {
-//     careerInput.setCustomValidity('Por favor, ingrese una carrera válida.');
-//   }
-// });
-
-// const nameInput = document.getElementById('nombreEmpleado');
-
-// nameInput.addEventListener('input', function () {
-//   const nameValue = nameInput.value.trim();
-//   const namePattern = /^[a-zA-Z\s]+$/;
-
-//   if (nameValue === '') {
-//     nameInput.setCustomValidity('El nombre no puede estar vacío.');
-//   } else if (!namePattern.test(nameValue)) {
-//     nameInput.setCustomValidity('Por favor, ingrese un nombre válido (solo letras y espacios).');
-//   } else {
-//     nameInput.setCustomValidity('');
-//   }
-// });
 const cerrarModal = document.getElementById('cerrar-modal');
 const modal = document.getElementById('mi_modal');
 
 cerrarModal.addEventListener('click', function(){
   modal.classList.remove('modal--show');
 });
-
-
-
-
-
 function mostrarAlerta(idUsuario, estadoActual,nombreUsuario) {
   const swalWithBootstrapButtons = Swal.mixin({
       customClass: {
@@ -183,8 +126,6 @@ function openSweetAlert(id) {
               Swal.showValidationMessage('Todos los campos son obligatorios');
               return false;
           }
-
-          // Redirigir con GET enviando ID y descripción
           window.location.href = "index.php?r=ticket/terminar-ticket&id=" + encodeURIComponent(id) + "&descripcion=" + encodeURIComponent(descripcion);
       }
   });

@@ -1,6 +1,7 @@
 <?php
 
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 
 $clase ="";
@@ -21,21 +22,21 @@ if(Yii::$app->session->hasFlash('error')){
 
 	<ul class="box-info">
 		<li>
-			<i class='bx bxs-briefcase-alt-2'></i>
+			<?= Html::a("<i class='bx bxs-briefcase-alt-2'></i>",['panel/empleados']);?>
 			<span class="text">
 				<h3><?= ($empleados) ? $empleados[0]['cantidad'] : 0 ?></h3>
 				<p>Empleados</p>
 			</span>
 		</li>
 		<li>
-			<i class='bx bx-ghost' style="background-color:#000000; color:#ffffff;"></i>
+			<button class="filtro-btn" data-estado='0'><i class='bx bx-ghost' style="background-color:#000000; color:#ffffff;"></i></button>
 			<span class="text">
 				<h3><?= ($empleados) ? $empleados[0]['inactivo'] : 0 ?></h3>
 				<p>Bloqueados</p>
 			</span>
 		</li>
 		<li>
-			<i class='bx bx-user-voice' style="background-color:#ffffff; color:#000000;"></i>
+			<button class="filtro-btn" data-estado='1'><i class='bx bx-user-voice' style="background-color:#ffffff; color:#000000;"></i></button>
 			<span class="text">
 				<h3><?= ($empleados) ? $empleados[0]['activo'] : 0?></h3>
 				<p>Activos</p>
@@ -46,6 +47,22 @@ if(Yii::$app->session->hasFlash('error')){
 		<div class="order">
 			<div class="head">
 				<h3>Lista de Empleados</h3>
+				<?php $form = ActiveForm::begin([
+                    'method' => 'get',
+                    'action' => ['panel/empleados'], 
+                ]); ?>
+                <div class="d-flex justify-content-around">
+                    <?= Html::textInput('search', $search, ['placeholder' => 'Buscar por username', 'class' => 'form-control']) ?>
+                    <?= Html::submitButton('Buscar', ['class' => 'btn btn-primary m-2']) ?>
+                </div>
+
+                <?php ActiveForm::end(); ?>
+				<?php $form = ActiveForm::begin([
+					'method' => 'get',
+					'action' => ['panel/empleados'],
+				]);?>
+				<?= Html::a('Ordenar por Calificación', ['panel/empleados', 'sort' => 'calificacion_promedio'], ['class' => 'btn btn-warning m-2']) ?>
+				<?php ActiveForm::end();?>
 				<a href="#" data-bs-toggle="modal" data-bs-target="#myModal" class="btn btn-primary  p-2 "><i class='bx bx-plus'></i>Añadir empleado</a>
 			</div>
 			<div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -137,7 +154,9 @@ if(Yii::$app->session->hasFlash('error')){
 					</div>
 				</div>
 			</div>
+			<div id="empleado-container">
 			<?= $this->render('_empleados' ,['empleados' => $empleados])?>
+			</div>
 		</div>
 	</div>
 	<section id="mi_modal" class="modalito  <?= $clase?>">
@@ -149,3 +168,27 @@ if(Yii::$app->session->hasFlash('error')){
 		</div>
 	</section>
 </main>
+
+
+<?php 
+$ajaxUrl = Url::to(['panel/filtrar-operadores']);
+$script = <<<JS
+	  $(document).on('click', '.filtro-btn', function() {
+            let estado = $(this).data('estado');
+            $.ajax({
+                url: '$ajaxUrl',
+                type: 'GET',
+                data: { estado: estado},
+                success: function(response) {
+                    $('#empleado-container').html(response);
+                },
+                error: function() {
+                    alert('Error al filtrar los tickets.');
+                }
+            });
+        });
+
+JS;
+
+$this->registerJs($script);
+?>

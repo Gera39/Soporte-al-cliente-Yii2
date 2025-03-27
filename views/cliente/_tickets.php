@@ -35,6 +35,18 @@ echo GridView::widget([
             }
         ],
         [
+            'label' => 'Operador',
+            'value' => function($model){
+                return $model->operador->usuario->username;
+            },
+        ],
+        [
+            'label' => 'Cliente',
+            'value' => function($model){
+                return $model->cliente->usuario->username;
+            },
+        ],
+        [
             'label' => 'Categoria',
             'format' => 'raw',
             'contentOptions' => ['style' => 'text-align: center;'],
@@ -115,14 +127,12 @@ echo GridView::widget([
         [
             'label' => 'Chat',
             'format' => 'raw',
-            // 'visible' => Yii::$app->user->identity->role == 'cliente' || Yii::$app->user->identity->role == 'operador',
             'contentOptions' => ['style' => 'text-align: center;'],
             'value' => function ($model) {
                 $user = Yii::$app->user->identity;
                 $idUser = $user->id;
                 $rol = $user->role;
 
-                // Consulta para el contador de mensajes no leídos (ejemplo)
                 $count = MensajesTicket::find()
                     ->where(['id_ticket' => $model->id, 'leido' => 0])
                     ->andWhere(['!=', 'id_remitente' , Yii::$app->user->identity->id])

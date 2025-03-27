@@ -687,6 +687,25 @@ body {
     justify-content: center;
     font-weight: bold;
 }
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+.pagination li {
+    margin: 0 5px;
+    list-style: none;
+}
+.pagination li a {
+    padding: 5px 10px;
+    border: 1px solid #ddd;
+}
+.pagination li.active a {
+    background-color: #337ab7;
+    color: white;
+    border-color: #337ab7;
+}
 @media screen and (max-width: 768px) {
 	#sidebar {
 		width: 200px;

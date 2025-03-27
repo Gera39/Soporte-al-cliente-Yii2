@@ -2,7 +2,7 @@
 
 use yii\helpers\Html;
 use yii\helpers\Url;
-
+use yii\widgets\ActiveForm;
 use app\models\Tickets;
 ?>
 
@@ -23,6 +23,26 @@ use app\models\Tickets;
         <div class="todo">
             <div class="head d-flex justify-content-between">
                 <h2><?= Html::encode('Tickets') ?></h2>
+                <?php $form = ActiveForm::begin([
+                    'method' => 'get',
+                    'action' => ['panel/tickets-empleado'], // Asegúrate de que el controlador sea correcto
+                ]); ?>
+                <div class="d-flex justify-content-around">
+                    <?= Html::textInput('search', $search, ['placeholder' => 'Buscar Operador', 'class' => 'form-control']) ?>
+                    <?= Html::submitButton('Buscar', ['class' => 'btn btn-primary m-2']) ?>
+                </div>
+
+                <?php ActiveForm::end(); ?>
+                <?php $form = ActiveForm::begin([
+                    'method' => 'get',
+                    'action' => ['panel/tickets-empleado'], // Asegúrate de que el controlador sea correcto
+                ]); ?>
+                <div class="d-flex justify-content-around">
+                    <?= Html::textInput('searchCliente', $search, ['placeholder' => 'Buscar Cliente', 'class' => 'form-control']) ?>
+                    <?= Html::submitButton('Buscar', ['class' => 'btn btn-primary m-2']) ?>
+                </div>
+
+                <?php ActiveForm::end(); ?>
                 <div>
                     <button type="button" class="btn btn-danger filtro-btn" data-estado="Pendiente">
                         Pendientes

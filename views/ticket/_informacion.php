@@ -7,7 +7,18 @@ use yii\helpers\Html;
 echo DetailView::widget([
     'model' => $model,
     'attributes' => [
-
+        [
+            'label' => 'Operador',
+            'value' => function($model){
+                return $model->operador->usuario->username;
+            },
+        ],
+        [
+            'label' => 'Cliente',
+            'value' => function($model){
+                return $model->cliente->usuario->username;
+            },
+        ],
         [
             'label' => 'Categoria',
             'value' => $model->getCategoria()->one()->name,

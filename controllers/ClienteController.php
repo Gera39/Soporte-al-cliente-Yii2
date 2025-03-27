@@ -192,8 +192,26 @@ class ClienteController extends BaseController
     }
 
     public function actionIndex()
+    {   
+        $search = $this->request->get('search');
+        $query = Cliente::find()->orderBy(['id' => SORT_DESC]);
+        if (!empty($search)) {
+            $query->joinWith([
+            'usuario' => function($q) use ($search) {
+                $q->andWhere(['or', 
+                ['like', 'users.username', $search],
+                ['like', 'users.email', $search]
+                ]);
+            }
+            ]);
+        }
+        $clientes = $query->all();
+        return $this->render('index', ['clientes' => $clientes,'search' => $search]);
+    }
+
+    public function actionFiltrarCliente($estado)
     {
-        $clientes = Cliente::find()->orderBy(['id' => SORT_DESC])->all();
-        return $this->render('index', ['clientes' => $clientes]);
+        $clientes = Cliente::find()->joinWith('usuario')->where(['users.estado' => $estado])->andWhere(['users.role' => 'cliente'])->all();
+        return $this->renderPartial('_clientes', ['clientes' => $clientes]);
     }
 }

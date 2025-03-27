@@ -59,7 +59,7 @@ class HistorialResolucion extends \yii\db\ActiveRecord
             ['rol_usuario', 'in', 'range' => array_keys(self::optsRolUsuario())],
             ['estado_anterior', 'in', 'range' => array_keys(self::optsEstadoAnterior())],
             ['estado_nuevo', 'in', 'range' => array_keys(self::optsEstadoNuevo())],
-            [['id_usuario'], 'exist', 'skipOnError' => true, 'targetClass' => Users::class, 'targetAttribute' => ['id_usuario' => 'id']],
+            [['id_usuario'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['id_usuario' => 'id']],
             [['id_ticket'], 'exist', 'skipOnError' => true, 'targetClass' => Tickets::class, 'targetAttribute' => ['id_ticket' => 'id']],
         ];
     }
@@ -98,7 +98,7 @@ class HistorialResolucion extends \yii\db\ActiveRecord
      */
     public function getUsuario()
     {
-        return $this->hasOne(Users::class, ['id' => 'id_usuario']);
+        return $this->hasOne(User::class, ['id' => 'id_usuario']);
     }
 
 

@@ -30,12 +30,13 @@ use yii\helpers\Url;
     <?php $form = ActiveForm::begin(); ?>
     <div class="form-group">
         <label>Contraseña Actual</label>
-        <input type="password" name="current_password" class="form-control" required>
+        <input id="pass-actual" type="password" name="current_password" class="form-control" required>
     </div>
-    <?= $form->field($model, 'password')->passwordInput(['required' => true,'value' => '']) ?>
+    <?= $form->field($model, 'password')->passwordInput(['required' => true,'value' => '','id' => 'pass-nueva']) ?>
     <div class="form-group">
         <?= Html::submitButton('Guardar', ['class' => 'btn btn-primary m-4']) ?>
         <?= Html::a('Cancelar', ['perfil'], ['class' => 'btn btn-secondary']) ?>
     </div>
     <?php ActiveForm::end(); ?>
 </main>
+

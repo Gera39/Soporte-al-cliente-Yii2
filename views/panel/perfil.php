@@ -40,14 +40,5 @@ if (Yii::$app->session->hasFlash('error')) {
     </div>
 
     <?php ActiveForm::end(); ?>
-
-
-
-
-
-
-
-
-
-
 </main>
+

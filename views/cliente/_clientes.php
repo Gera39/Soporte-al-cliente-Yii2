@@ -16,6 +16,12 @@ echo GridView::widget([
     'summary' => false,
     'columns' => [
         [
+            'label' => 'Username',
+            'value' => function($model){
+                return $model->usuario->username;
+            }
+        ],
+        [
             'label' => 'Nombre',
             'value' => function($model){
                 return $model->usuario->nombre;

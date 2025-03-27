@@ -9,6 +9,7 @@ use yii\web\Controller;
 
 use app\models\EmpleadoForm;
 use app\models\Logs;
+use app\models\Operador;
 use app\models\Paquete;
 use app\models\RegistroAsistencia;
 use app\models\ReporteOperadores;
@@ -48,13 +49,13 @@ class PanelController extends BaseController
 
         $operador = User::findOne(Yii::$app->user->id);
         $ultimoRegistro = $operador->operadores->getRegistroAsistencias()
-            ->orderBy(['fecha' => SORT_DESC]) 
+            ->orderBy(['fecha' => SORT_DESC])
             ->one();
 
-       
+
         if ($ultimoRegistro) {
             $fechaRegistro = Yii::$app->formatter->asDate($ultimoRegistro->fecha, 'php:Y-m-d');
-            $fechaHoy = date('Y-m-d'); 
+            $fechaHoy = date('Y-m-d');
             if ($fechaRegistro === $fechaHoy) {
                 Yii::$app->session->setFlash('mensaje-salida', 'Ya tienes un registro de asistencia hoy. Solo marca salida y saldras del sistema');
             } else {
@@ -65,7 +66,7 @@ class PanelController extends BaseController
         return $this->render('dashboardOperador', ['model' => $operador, 'asistencia' => $registroAsistencia]);
     }
     public function actionDashboardCliente()
-    {  
+    {
         $paquetes = $this->enlazarPaquetes();
         return $this->render('dashboardCliente', ['paquetes' => $paquetes]);
         // return $this->render('dashboardCliente');
@@ -82,7 +83,7 @@ class PanelController extends BaseController
         return $paquetesComprados;
     }
 
-    
+
     public function enlazarPaquetes()
     {
         $paquetesComprados = $this->paquetesComprado(Yii::$app->user->identity->cliente->id);
@@ -102,15 +103,19 @@ class PanelController extends BaseController
             $post = Yii::$app->request->post();
             $currentPassword = $post['current_password'] ?? '';
             $newPassword = $post['User']['password'] ?? '';
-
+            if ($newPassword == $currentPassword) {
+                Yii::$app->session->setFlash('success', 'Contraseña es la misma que la actual ');
+                return $this->render('cambiar', ['model' => $model]);
+            }
             $result = Yii::$app->db->createCommand('CALL cambiar_contra(:id,:contra_actual,:contra_nueva)', [
                 ':id' => Yii::$app->user->identity->id,
                 ':contra_actual' => $currentPassword,
                 ':contra_nueva' => $newPassword,
             ])->queryAll();
-            if ($result[0]['resultado'] === 201) {
+
+            if ($result && $result[0]['resultado'] === 201) {
                 Yii::$app->session->setFlash('success', 'Se ha cambiado correctamente la contraseña');
-            } else if ($result[0]['resultado'] === 400) {
+            } else if ($result && $result[0]['resultado'] === 400) {
                 Yii::$app->session->setFlash('error', 'Contraseña actual no es la correcta');
             } else {
                 Yii::$app->session->setFlash('error', 'Ocurrio un error intentelo nuevamente');
@@ -120,11 +125,25 @@ class PanelController extends BaseController
     }
     public function actionEmpleados()
     {
+        $search = Yii::$app->request->get('search');
+
         if (Yii::$app->user->identity->role === 'admin') {
             $model = new EmpleadoForm();
-            $sql = "CALL obtener_empleados();";
+            $sql = "SELECT * FROM obtener_operadores;";
             $empleados = Yii::$app->db->createCommand($sql)->queryAll();
-            return $this->render('empleados', ['empleados' => $empleados, 'model' => $model]);
+
+            if (!empty($search)) {
+                $sql = "SELECT * FROM obtener_operadores WHERE username LIKE :search";
+                $command = Yii::$app->db->createCommand($sql);
+                $command->bindValue(':search', "%$search%");
+                $empleados = $command->queryAll();
+            }
+
+            return $this->render('empleados', [
+                'empleados' => $empleados,
+                'model' => $model,
+                'search' => $search
+            ]);
         } else {
             return $this->redirect(['panel/notfound']);
         }
@@ -170,15 +189,44 @@ class PanelController extends BaseController
     }
     public function actionTicketsEmpleado()
     {
-        
-        $tickets = Tickets::find()->orderBy(['id' => SORT_DESC])->all();
-        return $this->render('ticketEmpleado', ['tickets' => $tickets]);
+        $searchOperador = Yii::$app->request->get('search');
+        $searchCliente = Yii::$app->request->get('searchCliente');
+        $query = Tickets::find()->orderBy(['id' => SORT_DESC]);
+        if (!empty($searchOperador)) {
+            $query->joinWith([
+                'operador.usuario' => function($q) use ($searchOperador) {
+                    $q->andWhere(['like', 'users.username', $searchOperador]);
+                }
+            ]);
+        }
+        if(!empty($searchCliente)){
+            $query->joinWith([
+                'cliente.usuario' => function($q) use ($searchCliente) {
+                    $q->andWhere(['like', 'users.username', $searchCliente]);
+                }
+            ]);
+        }
+        $tickets = $query->all();
+        return $this->render('ticketEmpleado', [
+            'tickets' => $tickets,
+            'search' => $searchOperador,
+            'searchCliente' => $searchCliente,
+        ]);
     }
 
     public function actionFiltrar($estado)
     {
         $tickets = Tickets::find()->where(['estado_ticket' => $estado])->all();
         return $this->renderPartial('/cliente/_tickets', ['tickets' => $tickets]);
+    }
+
+    public function actionFiltrarOperadores($estado)
+    {
+        $sql = "SELECT * FROM obtener_operadores WHERE estado = :estado";
+        $command = Yii::$app->db->createCommand($sql);
+        $command->bindValue(':estado', $estado);
+        $empleados = $command->queryAll();
+        return $this->renderPartial('_empleados', ['empleados' => $empleados]);
     }
 
     public function actionClientes()
@@ -195,6 +243,7 @@ class PanelController extends BaseController
         return $this->redirect(['panel/reportes']);
     }
 
+  
     public function actionResoluciones()
     {
         if (User::getPermitidoSeccion(6)) {
@@ -216,4 +265,5 @@ class PanelController extends BaseController
             'search' => $search
         ]);
     }
+    
 }
