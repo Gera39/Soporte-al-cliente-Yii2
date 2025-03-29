@@ -62,7 +62,10 @@ echo GridView::widget([
                 return $model->getPackage()->one()->nombre_paquete;
             }
         ],
-        'descripcion',
+        [
+            'label' => 'Descripción',
+            'value' => 'descripcion',
+        ],
         [
             'label' => 'Estado Ticket',
             'format' => 'raw',

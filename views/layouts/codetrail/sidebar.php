@@ -20,6 +20,12 @@ $rol = Yii::$app->user->identity->role;
                 ['panel/dashboard']
             ) ?>
         </li>
+        <li>
+            <?= Html::a(
+                '<i class="bx bxs-dashboard"></i> Solicitudes cancelacion',
+                ['solicitudes/index']
+            ) ?>
+        </li>
         <?php if ($rol === 'admin'): ?>
             <li>
                 <?= Html::a(

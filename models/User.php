@@ -153,6 +153,12 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         }
     } 
 
+
+
+    public function getSolicitudesCancelacion(){
+        return $this->hasMany(SolicitudesCancelacion::class,['id_usuario' => 'id']);
+    }
+
     public static function getEstadoUsuario(){
         return Yii::$app->user->identity->estado === 0 ? true: false ;
     }

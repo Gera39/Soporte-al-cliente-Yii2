@@ -131,7 +131,7 @@ class PanelController extends BaseController
             $model = new EmpleadoForm();
             $sql = "SELECT * FROM obtener_operadores;";
             $empleados = Yii::$app->db->createCommand($sql)->queryAll();
-
+            
             if (!empty($search)) {
                 $sql = "SELECT * FROM obtener_operadores WHERE username LIKE :search";
                 $command = Yii::$app->db->createCommand($sql);
@@ -161,16 +161,46 @@ class PanelController extends BaseController
     public function actionReportes()
     {
         if (User::getPermitidoSeccion(3)) {
-            Yii::$app->session->setFlash('error', 'Pagina bloqueada');
+            Yii::$app->session->setFlash('error', 'Página bloqueada');
             return $this->redirect(['panel/notfound']);
         }
-        $user = Yii::$app->user->identity;
-        if ($user->role === 'admin') {
-            $reportes = ReporteOperadores::find()->orderBy(['id' => SORT_DESC])->all();
-        } elseif ($user->role === 'operador' || $user->role === 'cliente') {
-            $reportes = ReporteOperadores::find()->where(['id_remitente' => $user->id])->orderBy(['id' => SORT_DESC])->all();
+
+        $searchOperador = Yii::$app->request->get('search');
+        $searchCliente = Yii::$app->request->get('searchCliente');
+
+        $query = ReporteOperadores::find()->orderBy(['id' => SORT_DESC]);
+
+        if (!empty($searchOperador)) {
+            $query->joinWith([
+                'operador.usuario' => function ($q) use ($searchOperador) {
+                    $q->andWhere(['like', 'users.nombre', $searchOperador]);
+                }
+            ]);
         }
-        return $this->render('reporte', ['reportes' => $reportes]);
+
+        if (!empty($searchCliente)) {
+            $query->joinWith([
+                'cliente.usuario' => function ($q) use ($searchCliente) {
+                    $q->andWhere(['like', 'users.nombre', $searchCliente]);
+                }
+            ]);
+        }
+
+        $user = Yii::$app->user->identity;
+
+        if ($user->role === 'admin') {
+            $reportes = $query->all();
+        } elseif (in_array($user->role, ['operador', 'cliente'])) {
+            $reportes = $query->where(['id_remitente' => $user->id])->all();
+        } else {
+            $reportes = [];
+        }
+
+        return $this->render('reporte', [
+            'reportes' => $reportes,
+            'search' => $searchOperador,
+            'searchCliente' => $searchCliente
+        ]);
     }
 
     public function actionServiciosCliente()

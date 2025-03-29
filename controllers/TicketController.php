@@ -105,8 +105,6 @@ class TicketController extends BaseController
             $ticket = Tickets::findOne($id);
             $ticket->estado_ticket = 'Resuelto';
             $ticket->comentario_resolucion = $descripcion;
-
-
             if ($ticket->save()) {
                 Yii::$app->session->setFlash('success', '¡Ticket levantado con éxito!');
                 return $this->redirect(['operador/ticket']);
@@ -114,7 +112,6 @@ class TicketController extends BaseController
                 Yii::$app->session->setFlash('error', 'Error al levantar el ticket.');
             }
         }
-    
         return $this->redirect(['ticket/index']);
     }
 }

@@ -1,5 +1,6 @@
 <?php
 
+use app\models\SolicitudesCancelacion;
 use yii\data\ArrayDataProvider;
 use yii\data\Sort;
 use yii\grid\GridView;
@@ -29,7 +30,10 @@ echo GridView::widget([
             },
             'headerOptions' => ['style' => 'text-align: center;'],
         ],
-        'descripcion',
+        [
+            'label' => 'Descripción',
+            'value' => 'descripcion',
+        ],
         [
             'attribute' => 'Precio',
             'headerOptions' => ['style' => 'text-align: center;'],
@@ -81,6 +85,23 @@ echo GridView::widget([
                 ]) .
                     ' <a class="btn '.$clase.'" onclick="mostrarAlerta(' . $model->id . ',\'' . $estadoTexto . '\',\'paquete\')" href="#"><i class="bx bx-block"></i></a>';
             }
+        ],
+        [
+            'label' => 'Cancelar',
+            'visible' => (Yii::$app->user->identity->role === 'cliente' || Yii::$app->user->identity->role === 'operador') && $permiso === 'no' ,
+            'format' => 'raw',
+                'value' => function($model){
+                    $id = Yii::$app->user->identity->id;
+                    if(SolicitudesCancelacion::existeSolicitud($id,$model->id)){
+                        return '<a href="index?r=solicitudes/index" class="btn btn-primary">Solicitud Enviada</a>';
+                    }else if (SolicitudesCancelacion::existeSolicitudRechazadas($id,$model->id)) {
+                        return '<a href="index?r=solicitudes/index" class="btn btn-danger">Solicitud Rechazada</a>';
+                    }
+                    return Html::a('Cancelar','#',[
+                        'class' => 'btn btn-warning',
+                        'onclick' => 'cancelacionPaquete('.$model->id.','.$id.')'
+                    ]);
+                }
         ],
         [
             'label' => 'Compra',

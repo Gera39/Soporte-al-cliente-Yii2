@@ -32,7 +32,7 @@ if (Yii::$app->session->hasFlash('error')) {
     <?= $form->field($model, 'username')->textInput(['class' => 'form-control custom-input', 'required' => true]) ?>
     <?= $form->field($model, 'nombre')->textInput(['class' => 'form-control custom-input', 'required' => true]) ?>
     <?= $form->field($model, 'email')->input('email', ['class' => 'form-control custom-input', 'required' => true]) ?>
-    <?= $form->field($model, 'telefono')->input('tel', ['class' => 'form-control custom-input', 'required' => true]) ?>
+    <?= $form->field($model, 'telefono')->input('tel', ['class' => 'form-control custom-input', 'required' => true])->label('Teléfono') ?>
    
     <div class="text-center mt-3">
         <?= Html::submitButton('Guardar', ['class' => 'btn btn-primary btn-sm px-3']) ?>

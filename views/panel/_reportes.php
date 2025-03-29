@@ -12,9 +12,13 @@ echo  GridView::widget([
     'summary' => false,
     'columns' => [
         'nombre_reporte',
-        'descripcion',
+        [
+            'label' => 'Descripción',
+            'value' => 'descripcion',
+        ],
         [
             'label' => 'Operador',
+            'visible' => Yii::$app->user->identity->role === 'admin',
             'format' => 'raw',
             'value' => function($model){
                 return Html::a($model->operador->usuario->nombre, ['operador/view', 'id' => $model->operador->usuario->id]);
@@ -22,6 +26,7 @@ echo  GridView::widget([
         ],
         [
             'label' => 'Cliente',
+            'visible' => Yii::$app->user->identity->role === 'admin',
             'format' => 'raw',
             'value' => function($model){
                 return Html::a($model->cliente->usuario->nombre, ['cliente/view', 'id' => $model->cliente->usuario->id]);

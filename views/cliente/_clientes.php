@@ -34,7 +34,7 @@ echo GridView::widget([
             }
         ],
         [
-            'label' => 'Telefono',
+            'label' => 'Teléfono',
             'value' => function($model){
                 return ($model->usuario->telefono) ? $model->usuario->telefono : 'No tiene';
             }

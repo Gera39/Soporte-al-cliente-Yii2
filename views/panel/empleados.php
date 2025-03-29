@@ -16,27 +16,27 @@ if(Yii::$app->session->hasFlash('error')){
 <main>
 	<div class="head-title">
 		<div class="left mb-4">
-			<h1>Empleados</h1>
+			<h1>Operadores</h1>
 		</div>
 	</div>
 
 	<ul class="box-info">
 		<li>
-			<?= Html::a("<i class='bx bxs-briefcase-alt-2'></i>",['panel/empleados']);?>
+		<?= Html::a("<i class='bx bxs-briefcase-alt-2'></i>",['panel/empleados']);?>
 			<span class="text">
 				<h3><?= ($empleados) ? $empleados[0]['cantidad'] : 0 ?></h3>
-				<p>Empleados</p>
+				<p>Operadores</p>
 			</span>
 		</li>
 		<li>
-			<button class="filtro-btn" data-estado='0'><i class='bx bx-ghost' style="background-color:#000000; color:#ffffff;"></i></button>
+			<button class="filtro-btn" data-estado='0'><i class='bx bx-ghost mover' style="background-color:#000000; color:#ffffff;"></i></button>
 			<span class="text">
 				<h3><?= ($empleados) ? $empleados[0]['inactivo'] : 0 ?></h3>
 				<p>Bloqueados</p>
 			</span>
 		</li>
 		<li>
-			<button class="filtro-btn" data-estado='1'><i class='bx bx-user-voice' style="background-color:#ffffff; color:#000000;"></i></button>
+			<button class="filtro-btn" data-estado='1'><i class='bx bx-user-voice mover' style="background-color:#ffffff; color:#000000;"></i></button>
 			<span class="text">
 				<h3><?= ($empleados) ? $empleados[0]['activo'] : 0?></h3>
 				<p>Activos</p>
@@ -61,7 +61,7 @@ if(Yii::$app->session->hasFlash('error')){
 					'method' => 'get',
 					'action' => ['panel/empleados'],
 				]);?>
-				<?= Html::a('Ordenar por Calificación', ['panel/empleados', 'sort' => 'calificacion_promedio'], ['class' => 'btn btn-warning m-2']) ?>
+				<?= Html::a('Ordenar por Calificación Descendente', ['panel/empleados', 'sort' => 'calificacion_promedio_desc'], ['class' => 'btn btn-warning m-2']) ?>
 				<?php ActiveForm::end();?>
 				<a href="#" data-bs-toggle="modal" data-bs-target="#myModal" class="btn btn-primary  p-2 "><i class='bx bx-plus'></i>Añadir empleado</a>
 			</div>

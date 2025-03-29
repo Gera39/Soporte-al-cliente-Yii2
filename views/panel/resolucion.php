@@ -47,7 +47,7 @@ use yii\widgets\ActiveForm;
                         'value' => 'descripcion'
                     ],
                     [
-                        'label' => 'Solucion',
+                        'label' => 'Solución',
                         'value' => 'comentario_resolucion'
                     ]
                 ]

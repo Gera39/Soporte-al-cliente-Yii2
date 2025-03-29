@@ -37,7 +37,7 @@ echo GridView::widget([
 			'headerOptions' => ['style' => 'text-align: center; font-size:16px;'],
 		],
 		[
-			'attribute' => 'Calificacion',
+			'attribute' => 'Calificación',
 			'format' => 'raw',
 			'headerOptions' => ['style' => 'text-align: center; font-size:16px;'],
 			'value' => function ($model) {

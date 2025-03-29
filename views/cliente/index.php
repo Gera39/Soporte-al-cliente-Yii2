@@ -28,7 +28,7 @@ use yii\widgets\ActiveForm;
 			<button class="filtro-btn" data-estado='0'><i class='bx bx-ghost' style="background-color:#000000; color:#ffffff;"></i></button>
 			<span class="text">
 				<h3><?= Cliente::find()
-						->joinWith('usuario') // Relación directa
+						->joinWith('usuario') 
 						->where(['users.estado' => 0])
 						->andWhere(['users.role' => 'cliente'])
 						->count(); ?>
@@ -40,7 +40,7 @@ use yii\widgets\ActiveForm;
 			<button class="filtro-btn" data-estado='1'><i class='bx bx-user-voice' style="background-color:#ffffff; color:#000000;"></i></button>
 			<span class="text">
 				<h3><?= Cliente::find()
-						->joinWith('usuario') // Relación directa
+						->joinWith('usuario') 
 						->where(['users.estado' => 1])
 						->andWhere(['users.role' => 'cliente'])
 						->count(); ?></h3>

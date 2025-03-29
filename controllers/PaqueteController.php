@@ -7,6 +7,7 @@ use yii\web\Controller;
 use app\models\PaqueteForm;
 use app\models\Paquete;
 use app\models\PaqueteServicios;
+use app\models\SolicitudesCancelacion;
 use yii\web\NotFoundHttpException;
 
 class PaqueteController extends Controller
@@ -58,16 +59,21 @@ class PaqueteController extends Controller
         }   
     }
 
-    public function actionBorrar($id)
+    public function actionCancelarPaquete()
     {
-        $model = $this->findPaquete($id);
-        if ($model->delete()) {
-            Yii::$app->session->setFlash('success', 'Paquete eliminado correctamente.');
-            return $this->redirect(['servicio/index']);
+       if(Yii::$app->request->isGet){
+
+        $solicitud = Yii::$app->request->get();
+        $model = new SolicitudesCancelacion();
+        $model->id_usuario  = $solicitud['idUser'];
+        $model->id_paquete = $solicitud['id'];
+        $model->razon_cancelacion =$solicitud['descripcion'] ?? 'Sin razón especifica';
+        $model->fecha_solicitud = new \yii\db\Expression('NOW()');
+        if($model->save()){
+            return $this->redirect(['cliente/servicios-cliente']);
         }
-        Yii::$app->session->setFlash('error', 'No se pudo eliminar el paquete.');
-        return $this->redirect(['servicio/index']);
-        
+        return 'no entro al save';
+       }
     }
 
     public function actionUpdateEstatus($id = null){
