@@ -70,9 +70,34 @@ class PaqueteController extends Controller
         $model->razon_cancelacion =$solicitud['descripcion'] ?? 'Sin razón especifica';
         $model->fecha_solicitud = new \yii\db\Expression('NOW()');
         if($model->save()){
-            return $this->redirect(['cliente/servicios-cliente']);
+            return $this->redirect(['solicitudes/index']);
         }
         return 'no entro al save';
+       }
+    }
+    public function actionCancelarSolicitud()
+    {
+       if (Yii::$app->request->isGet) {
+            $solicitud = Yii::$app->request->get();
+            $model = SolicitudesCancelacion::findOne($solicitud['id']);
+            if (!$model) {
+                Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+                return ['status' => 'error', 'message' => 'Solicitud no encontrada'];
+            }
+            $model->id_admin = $solicitud['idUser'];
+            $model->estado_solicitud = 'Rechazado';
+            $model->razon_respuesta = $solicitud['descripcion'] ?? 'Sin razón especifica';
+            $model->fecha_resolucion = new \yii\db\Expression('NOW()');
+
+            // if (!$model->validate()) {
+            //     Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+            //     return ['status' => 'error', 'message' => 'Validación fallida', 'errors' => $model->errors];
+            // }
+
+            if ($model->save()) {
+                Yii::$app->session->setFlash('success', 'Solicitud rechazada correctamente.');
+                return $this->redirect(['solicitudes/index']);
+            }
        }
     }
 
