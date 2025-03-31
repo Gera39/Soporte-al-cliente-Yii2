@@ -146,19 +146,20 @@ function openSweetAlert(id) {
   });
 }
 
-function cancelacionPaquete(id, idUsuario) {
+function cancelacionPaquete(id, idUsuario,rol) {
   Swal.fire({
-    title: "Motivo de cancelación",
+    title: rol === "admin" ? "Motivo de rechazo" : "Motivo de cancelación",
     html: `
          <div class="alert alert-warning swal2-custom-alert">
                 <h2><i class="bx bx-error-circle"></i> ADVERTENCIA</h2>
-                <p>Esta acción no puede revertirse. Si usted tiene mas de 10 cancelaciones el adminitrador tomara asuntos con usted Gracias ¿Estás seguro de continuar?</p>
-            </div>
+                <p>${rol === "admin" ? "Esta acción es irreversible y será registrada en el sistema. Por favor, asegúrese de que esta decisión es definitiva." : "Esta acción no puede revertirse. Si usted tiene más de 10 cancelaciones el administrador tomará asuntos con usted. Gracias ¿Estás seguro de continuar?"}</p>
+          </div>
           <input type="hidden" id="pq-id" value="${id}"/>  
-          <input type="hidden" id="pq-idUser" value="${idUsuario}"/>  
- <textarea id="pq-descripcion" class="form-control mt-3" 
-                     placeholder="Describe la razón de cancelación (requerido)"
-                     rows="3" required></textarea>      `,
+          <input type="hidden" id="pq-idUser" value="${idUsuario}"/> 
+          <input type="hidden" id="pq-rol" value="${rol}"/> 
+          <textarea id="pq-descripcion" class="form-control mt-3" 
+          placeholder="Describe la razón de ${rol === "admin" ? "rechazo" : "cancelación"}(opcional)"
+          rows="3" required></textarea>      `,
     showCancelButton: true,
     confirmButtonText: "Guardar",
     cancelButtonText: "Cancelar",
@@ -166,12 +167,15 @@ function cancelacionPaquete(id, idUsuario) {
       let id = document.getElementById("pq-id").value;
       let idUser = document.getElementById("pq-idUser").value;
       let descripcion = document.getElementById("pq-descripcion").value;
+      let rol = document.getElementById("pq-rol").value;
       if (!id) {
         Swal.showValidationMessage("Todos los campos son obligatorios");
         return false;
       }
+
+      direccion = rol === "admin" ? "solicitud" : "paquete";
       window.location.href =
-        "index.php?r=paquete/cancelar-paquete&id=" +
+        "index.php?r=paquete/cancelar-"+direccion+"&id=" +
         encodeURIComponent(id) +
         "&idUser=" +
         encodeURIComponent(idUser) +

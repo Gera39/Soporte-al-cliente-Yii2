@@ -91,15 +91,15 @@ echo GridView::widget([
             'visible' => (Yii::$app->user->identity->role === 'cliente' || Yii::$app->user->identity->role === 'operador') && $permiso === 'no' ,
             'format' => 'raw',
                 'value' => function($model){
-                    $id = Yii::$app->user->identity->id;
-                    if(SolicitudesCancelacion::existeSolicitud($id,$model->id)){
+                    $user = Yii::$app->user->identity;
+                    if(SolicitudesCancelacion::existeSolicitud($user->id,$model->id)){
                         return '<a href="index?r=solicitudes/index" class="btn btn-primary">Solicitud Enviada</a>';
-                    }else if (SolicitudesCancelacion::existeSolicitudRechazadas($id,$model->id)) {
+                    }else if (SolicitudesCancelacion::existeSolicitudRechazadas($user->id,$model->id)) {
                         return '<a href="index?r=solicitudes/index" class="btn btn-danger">Solicitud Rechazada</a>';
                     }
                     return Html::a('Cancelar','#',[
                         'class' => 'btn btn-warning',
-                        'onclick' => 'cancelacionPaquete('.$model->id.','.$id.')'
+                        'onclick' => 'cancelacionPaquete('.$model->id.','.$user->id.',\'cliente\')',
                     ]);
                 }
         ],

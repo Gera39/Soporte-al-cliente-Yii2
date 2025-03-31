@@ -14,14 +14,14 @@ echo GridView::widget([
         'id',
         [
             'label' => 'Paquete',
-            'value' => function($model){
+            'value' => function ($model) {
                 return $model->paquete->nombre_paquete;
             }
         ],
         [
             'label' => 'Usuario',
             'visible' => Yii::$app->user->identity->role === 'admin',
-            'value' => function($model){
+            'value' => function ($model) {
                 return $model->usuario->username;
             }
         ],
@@ -29,10 +29,10 @@ echo GridView::widget([
         [
             'label' => 'Estado',
             'format' => 'raw',
-            'contentOptions' => function($model) {
+            'contentOptions' => function ($model) {
                 $style = 'font-weight: 600; text-align-center padding: 4px 8px;';
-                
-                switch($model->estado_solicitud) {
+
+                switch ($model->estado_solicitud) {
                     case 'Pendiente':
                         return ['style' => $style . 'background-color: #FFA500; color: #FFF;']; // Naranja
                     case 'Rechazado':
@@ -43,9 +43,9 @@ echo GridView::widget([
                         return ['style' => $style . 'background-color: #EEE;'];
                 }
             },
-            'value' => function($model) {
+            'value' => function ($model) {
                 $icon = '';
-                switch($model->estado_solicitud) {
+                switch ($model->estado_solicitud) {
                     case 'Pendiente':
                         $icon = '<i class="bx bx-time" style="font-size:20px; margin-right:5px"></i>';
                         break;
@@ -56,33 +56,47 @@ echo GridView::widget([
                         $icon = '<i class="bx bx-check-circle" style="font-size:20px;  margin-right:5px"></i>';
                         break;
                 }
-                
+
                 return Html::tag('span', $icon . $model->estado_solicitud, [
                     'class' => 'estado-badge',
                     'style' => 'display: inline-flex; align-items: center;'
                 ]);
             }
         ],
-        'razon_cancelacion',
         [
             'label' => 'Razon Respuesta',
-            'value' => function($model) {
+            'value' => function ($model) {
+                return $model->razon_cancelacion ?? 'No hay razón';
+            }
+        ],
+        [
+            'label' => 'Razon Respuesta',
+            'value' => function ($model) {
                 return $model->razon_respuesta ?? 'Esperando razón';
             }
         ],
         [
             'label' => 'Fecha Resolucion',
-            'value' => function($model) {
+            'value' => function ($model) {
                 return $model->fecha_resolucion ?? 'No hay fecha';
             }
         ],
         [
             'label' => 'Acciones',
             'format' => 'raw',
-            'value' => function($model) {
-                if($model->estado_solicitud !== 'Pendiente'){
+            'contentOptions' => ['style' => 'text-align: center; width: 20%;'],
+            'headerOptions' => ['style' => 'text-align: center;'],
+            'value' => function ($model) {
+                if ($model->estado_solicitud !== 'Pendiente') {
                     return '<span class="alert alert-success">No disponible</span>';
                 } else {
+                    if (Yii::$app->user->identity->role === 'admin') {
+                        $botones = Html::a('Aprobar Solicitud', ['solicitudes/aprobar', 'id' => $model->id], [
+                            'class' => 'btn btn-success mb-2',
+                        ]);
+                        $botones .= '<a class="btn btn-danger" onclick="cancelacionPaquete(' . $model->id . ', ' . Yii::$app->user->identity->id . ', \'admin\')">Rechazar Solicitud</a>';
+                        return $botones;
+                    }
                     return Html::a('Cerrar Solicitud', ['solicitudes/delete', 'id' => $model->id], [
                         'class' => 'btn btn-danger',
                     ]);
@@ -92,5 +106,3 @@ echo GridView::widget([
     ]
 
 ]);
-
-?>

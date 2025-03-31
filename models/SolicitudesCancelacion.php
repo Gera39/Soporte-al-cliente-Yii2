@@ -54,7 +54,7 @@ class SolicitudesCancelacion extends \yii\db\ActiveRecord
             ['estado_solicitud', 'in', 'range' => array_keys(self::optsEstadoSolicitud())],
             [['id_usuario'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['id_usuario' => 'id']],
             [['id_paquete'], 'exist', 'skipOnError' => true, 'targetClass' => Paquete::class, 'targetAttribute' => ['id_paquete' => 'id']],
-            [['id_admin'], 'exist', 'skipOnError' => true, 'targetClass' => Administradores::class, 'targetAttribute' => ['id_admin' => 'id']],
+            [['id_admin'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['id_admin' => 'id']],
         ];
     }
 
