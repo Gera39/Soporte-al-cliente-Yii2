@@ -2,14 +2,10 @@
 
 namespace app\controllers;
 
-use app\models\Cliente;
 use Yii;
-
-use yii\web\Controller;
 
 use app\models\EmpleadoForm;
 use app\models\Logs;
-use app\models\Operador;
 use app\models\Paquete;
 use app\models\RegistroAsistencia;
 use app\models\ReporteOperadores;
@@ -31,9 +27,12 @@ class PanelController extends BaseController
     public function actionDashboard()
     {
         $rol = Yii::$app->user->identity->role;
-        $operador = User::findOne(Yii::$app->user->id);
-        $operador->last_login = date('Y-m-d H:i:s');
-        $operador->save();
+        $usuario = User::findOne(Yii::$app->user->id);
+        $usuario->last_login = date('Y-m-d H:i:s');
+        $usuario->save();
+        if ($usuario->pregunta == null) {
+            return $this->redirect(['pregunta/preguntas', 'id' => Yii::$app->user->identity->id]);
+        }
         if ($rol == 'cliente') {
             return $this->redirect(['panel/dashboard-cliente']);
         } else if ($rol == 'admin') {
@@ -69,7 +68,6 @@ class PanelController extends BaseController
     {
         $paquetes = $this->enlazarPaquetes();
         return $this->render('dashboardCliente', ['paquetes' => $paquetes]);
-        // return $this->render('dashboardCliente');
     }
 
     public function paquetesComprado($id)
@@ -131,7 +129,7 @@ class PanelController extends BaseController
             $model = new EmpleadoForm();
             $sql = "SELECT * FROM obtener_operadores;";
             $empleados = Yii::$app->db->createCommand($sql)->queryAll();
-            
+
             if (!empty($search)) {
                 $sql = "SELECT * FROM obtener_operadores WHERE username LIKE :search";
                 $command = Yii::$app->db->createCommand($sql);
@@ -202,6 +200,46 @@ class PanelController extends BaseController
             'searchCliente' => $searchCliente
         ]);
     }
+    public function actionResetPassword()
+    {
+        $this->layout = 'main';
+        $reset = new \app\models\RegisterForm();
+        if (Yii::$app->request->isPost) {
+            $email = Yii::$app->request->post('RegisterForm')['email'];
+
+            $model = User::find()->where(['email' => $email])->one();
+            // var_dump($model);die;
+            if ($model) {
+                return $this->redirect(['panel/recover-password', 'id' => $model->id]);
+            }
+            Yii::$app->session->setFlash('error', 'El correo no existe');
+        }
+        return $this->render('reset', ['model' => $reset]);
+    }
+
+    public function actionRecoverPassword($id = null)
+    {
+        $this->layout = 'main';
+        $model = User::findOne($id);
+        $recover = new \app\models\PreguntaForm();
+        $preguntas = explode(',', $model->pregunta);
+        $recover->pregunta1 = $preguntas[0];
+        $recover->pregunta2 = $preguntas[1];
+        $recover->pregunta3 = $preguntas[2];
+
+        $fechaHoy = new \DateTime();
+        $fechaHoy->setTimezone(new \DateTimeZone('America/Mexico_City'));
+        $fechaHoy->setTime(0, 0, 0); // Establecer la hora a 00:00:00 para comparar solo la fecha
+
+        $fechaActualizacion = new \DateTime($model->updated_at);
+        $diferencia = $fechaHoy->diff($fechaActualizacion)->days;
+        if ($diferencia >= 1) {
+            return $this->render('recover', ['id' => $model->id, 'pregunta' => $model->pregunta, 'model' => $recover]);
+        }else{
+        Yii::$app->session->setFlash('error', 'Ya has entrado, intenta mas tarde o contacta al administrador(Whatsapp:227-106-2767)');
+        return $this->redirect(['panel/reset-password']);
+        }
+    }
 
     public function actionServiciosCliente()
     {
@@ -224,14 +262,14 @@ class PanelController extends BaseController
         $query = Tickets::find()->orderBy(['id' => SORT_DESC]);
         if (!empty($searchOperador)) {
             $query->joinWith([
-                'operador.usuario' => function($q) use ($searchOperador) {
+                'operador.usuario' => function ($q) use ($searchOperador) {
                     $q->andWhere(['like', 'users.username', $searchOperador]);
                 }
             ]);
         }
-        if(!empty($searchCliente)){
+        if (!empty($searchCliente)) {
             $query->joinWith([
-                'cliente.usuario' => function($q) use ($searchCliente) {
+                'cliente.usuario' => function ($q) use ($searchCliente) {
                     $q->andWhere(['like', 'users.username', $searchCliente]);
                 }
             ]);
@@ -273,7 +311,7 @@ class PanelController extends BaseController
         return $this->redirect(['panel/reportes']);
     }
 
-  
+
     public function actionResoluciones()
     {
         if (User::getPermitidoSeccion(6)) {
@@ -295,5 +333,4 @@ class PanelController extends BaseController
             'search' => $search
         ]);
     }
-    
 }

@@ -29,8 +29,11 @@ $config = [
         'mailer' => [
             'class' => \yii\symfonymailer\Mailer::class,
             'viewPath' => '@app/mail',
-            // send all mails to a file by default.
-            'useFileTransport' => true,
+            // // send all mails to a file by default.
+            'useFileTransport' => false, // Cambiar a false para enviar correos reales
+            'transport' => [
+                'dsn' => 'smtp://codetrailjeronimocodetrail@gmail.com:Teamomuchojeronimo@smtp.gmail.com:587',
+            ],
         ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,

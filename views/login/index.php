@@ -48,9 +48,9 @@ if (isset($_GET["mensaje"])) {
         <h1>Iniciar Sesion</h1>
         <?= $form->field($model, 'username')->textInput(['placeholder' => 'Correo o Usuario', 'required' => true])->label(false) ?>
         <?= $form->field($model, 'password')->passwordInput(['placeholder' => 'Contraseña', 'required' => true])->label(false) ?>
-
         <?= Html::submitButton('Iniciar', ['class' => 'btn btn-primary']) ?>
-
+        
+        <?= Html::a('Olvidé mi contraseña', ['panel/reset-password'], ['class' => 'btn btn-link text-decoration-none']) ?>
         <?php ActiveForm::end(); ?>
 
     </div>

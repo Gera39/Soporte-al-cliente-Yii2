@@ -14,7 +14,7 @@ class BaseController extends Controller{
                 'class' => AccessControl::class,
                 'rules' => [
                     [
-                        'actions' => ['notfound'], // Excluye esta acción
+                        'actions' => ['notfound','recover-password','reset-password','preguntas'], // Excluye esta acción
                         'allow' => true,
                     ],
                     [
