@@ -8,7 +8,7 @@ echo GridView::widget([
 	'dataProvider' => new ArrayDataProvider([
 		'allModels' => $empleados,
 		'pagination' => [
-            'pageSize' => 5, // Aquí estableces 5 elementos por página
+            'pageSize' => 5,
         ],
 		'sort' => [
 			'attributes' => ['id'],
@@ -53,7 +53,6 @@ echo GridView::widget([
 						? '<i class="bx bxs-star text-warning"></i>'
 						: '<i class="bx bx-star text-secondary"></i>';
 				}
-
 				$html .= '</div>';
 				return ($calificacion > 0) ? $html : '<span class="text-muted">Sin calificación</span>';
 			},
