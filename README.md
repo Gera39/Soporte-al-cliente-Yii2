@@ -1,43 +1,58 @@
-# 📬 Sistema de Soporte al Cliente - Yii2 + Bootstrap + JS
+# 🎧 Sistema de Soporte al Cliente - Yii2 Framework
 
-Sistema completo de levantamiento de tickets y gestión de soporte al cliente en línea. Desarrollado con el framework **Yii2**, **Bootstrap** para el frontend y **JavaScript** para funcionalidades dinámicas. Pensado para mejorar la atención, seguimiento y evaluación de operadores y clientes.
+Sistema web desarrollado en **Yii2 PHP Framework**, **Bootstrap** y **JavaScript** para la gestión de tickets, usuarios y operadores en un entorno de atención al cliente.
+
+> 🎯 Permite a los clientes generar tickets de soporte, a los operadores dar seguimiento, y a los administradores controlar, evaluar y gestionar el sistema.
 
 ---
 
-## 🚀 Funcionalidades principales
+## 📸 Vista previa
+
+<!-- Puedes agregar más imágenes subiéndolas a la carpeta /docs y enlazándolas aquí. Por ejemplo: -->
+
+![Vista previa del dashboard](docs/dashboard.png)
+![Vista previa de la Manejo  de permisos](docs/permisos.png)
+![Vista previa de la Manejo  de permisos(Cliente y Operador)](docs/seccionesIn.png)
+![Vista previa del Cliente](docs/vistaCliente.png)
+![Vista previa del Cliente cancelacion de paquete](docs/cancelacion.png)
+![Vista previa del Ticket cliente](docs/levantarTicket.png)     
+ 
+---
+
+## 🚀 Funcionalidades por Rol
 
 ### 👑 Administrador
-- Gestión de usuarios y operadores
-- Bloqueo y desbloqueo de cuentas
-- Registro de logs del sistema
-- Visualización de secciones individuales y generales
-- Reportes y calificaciones de operadores
+- 👥 CRUD de usuarios y operadores
+- 🔒 Bloquear y desbloquear cuentas
+- 🧾 Gestión de logs del sistema
+- 📈 Ver reportes y calificaciones
+- 🧩 Gestión de secciones del sistema
 
 ### 🎧 Operador
-- Ver sus tickets asignados
-- Revisar reportes de los clientes (quejas)
-- Visualizar su calificación
-- Levantar paquetes y servicios
+- 📨 Visualizar tickets asignados
+- 🚨 Atender quejas de clientes
+- 📊 Ver su calificación
+- 📦 Levantar paquetes y servicios
 
 ### 👤 Cliente
-- Levantar tickets de soporte
-- Ver historial de chat
-- Solicitar cancelaciones
-- Aceptar o rechazar decisiones
-- Visualizar estado de sus servicios
-- Ser bloqueado/desbloqueado por administración
+- 📝 Crear tickets
+- 💬 Historial de chats
+- ❌ Solicitar cancelación de servicios
+- 🔐 Bloqueo/Desbloqueo
+- 📃 Ver estado de sus servicios
 
 ---
 
-## 📁 Tecnologías utilizadas
+## 🧱 Tecnologías utilizadas
 
-| Tecnología     | Descripción                        |
-|----------------|------------------------------------|
-| Yii2 Framework | Backend PHP MVC y ORM              |
-| Bootstrap      | Interfaz responsive y moderna      |
-| JavaScript     | Interactividad del cliente         |
-| MySQL          | Base de datos relacional           |
-| HTML/CSS       | Maquetación y estilos personalizados |
+| Lenguaje/Framework | Uso                              |
+|--------------------|----------------------------------|
+| PHP - Yii2         | Backend y estructura MVC         |
+| Bootstrap          | Estilos responsive               |
+| JavaScript         | Interactividad y validaciones    |
+| MySQL              | Base de datos relacional         |
+| HTML/CSS           | Diseño de vistas y formularios   |
+
 
 ---
 
