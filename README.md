@@ -10,7 +10,7 @@ Sistema web desarrollado en **Yii2 PHP Framework**, **Bootstrap** y **JavaScript
 
 <!-- Puedes agregar más imágenes subiéndolas a la carpeta /docs y enlazándolas aquí. Por ejemplo: -->
 
-![Vista previa del dashboard](docs/dashboard.png)
+![Vista previa del dashboard](docs/login.png)
 ![Vista previa de la Manejo  de permisos](docs/permisos.png)
 ![Vista previa de la Manejo  de permisos(Cliente y Operador)](docs/seccionesIn.png)
 ![Vista previa del Cliente](docs/vistaCliente.png)
